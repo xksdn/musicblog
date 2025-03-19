@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+
+<html layout:decorate="~{layout}"> <!-- layout.html 상속-->
+<div layout:fragment="content">
+    <div class="title_line">노래 등록</div>
+    <div style="width: 50%; margin: 0px auto;">
+        <form name="frm" method="post" action="/cate/create" th:object="${categoryVO}">
+            <div>
+                <label>노래 재목</label>
+                <input type="text" name="title" value="" autofocus="autofocus"
+                       class="form-control fom-control-sm" style="width: 100%; margin-bottom: 5px;" th:field="*{title}">
+                <div th:if="${#fields.hasErrors('title')}" class="alert alert-danger" role="alert" style="margin-top: 5px;">
+                    <div th:each="err: ${#lists.sort(#fields.errors('title'))}" th:text="${err}"></div>
+                </div>
+            </div>
+            <div>
+                <label>가수 / 아티스트</label>
+                <input type="text" name="artist" value="" autofocus="autofocus"
+                       class="form-control fom-control-sm" style="width: 100%; margin-bottom: 5px" th:field="*{artist}">
+                <div th:if="${#fields.hasErrors('artist')}" class="alert alert-danger" role="alert" style="margin-top: 5px;">
+                    <div th:each="err: ${#lists.sort(#fields.errors('artist'))}" th:text="${err}"></div>
+                </div>
+            </div>
+            <div>
+                <label>장르</label>
+                <input type="text" name="genre" value="" autofocus="autofocus"
+                       class="form-control fom-control-sm" style="width: 70%; margin-bottom: 5px" th:field="*{genre}">
+                <div th:if="${#fields.hasErrors('genre')}" class="alert alert-danger" role="alert" style="margin-top: 5px;">
+                    <div th:each="err: ${#lists.sort(#fields.errors('genre'))}" th:text="${err}"></div>
+                </div>
+            </div>
+            <div>
+                <label>어울리는 분위기</label>
+                <input type="text" name="mood" value="" autofocus="autofocus"
+                       class="form-control fom-control-sm" style="width: 70%; margin-bottom: 5px" th:field="*{mood}">
+                <div th:if="${#fields.hasErrors('mood')}" class="alert alert-danger" role="alert" style="margin-top: 5px;">
+                    <div th:each="err: ${#lists.sort(#fields.errors('mood'))}" th:text="${err}"></div>
+                </div>
+            </div>
+            <div>
+                <label>발표된 시대</label>
+                <input type="text" name="era" value="" autofocus="autofocus"
+                       class="form-control fom-control-sm" style="width: 70%; margin-bottom: 5px" th:field="*{era}">
+                <div th:if="${#fields.hasErrors('era')}" class="alert alert-danger" role="alert" style="margin-top: 5px;">
+                    <div th:each="err: ${#lists.sort(#fields.errors('era'))}" th:text="${err}"></div>
+                </div>
+            </div>
+            <div>
+                <label>발표 지역</label>
+                <input type="text" name="region" value="" autofocus="autofocus"
+                       class="form-control fom-control-sm" style="width: 70%; margin-bottom: 5px" th:field="*{region}">
+                <div th:if="${#fields.hasErrors('region')}" class="alert alert-danger" role="alert" style="margin-top: 5px;">
+                    <div th:each="err: ${#lists.sort(#fields.errors('region'))}" th:text="${err}"></div>
+                </div>
+            </div>
+            <div>
+                <label>공개 여부(Y/N)</label>
+                <input type="text" name="visible" value="Y"
+                       class="form-control fom-control-sm" style="width: 70%; margin-bottom: 5px" th:field="*{visible}">
+                <div th:if="${#fields.hasErrors('visible')}" class="alert alert-danger" role="alert" style="margin-top: 5px;">
+                    <div th:each="err: ${#lists.sort(#fields.errors('visible'))}" th:text="${err}"></div>
+                </div>
+            </div>
+            <div class="content_body_bottom">
+                <button type="submit" class="btn btn-secondary btn-sm">등록</button>
+                <button type="button" onclick="location.href='/cate/list_all'" class="btn btn-secondary btn-sm">목록</button>
+            </div>
+
+        </form>
+        <div>
+        </div>
+</html>
