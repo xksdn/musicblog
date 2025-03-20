@@ -1,0 +1,10 @@
+package dev.boot.mvc.tool;
+
+public class Tool {
+  // 등록 성공
+  public static final String CREATE_SUCCESS = "create_success";
+
+  // 등록 실패
+  public static final String CREATE_FAIL = "create_fail";
+
+}

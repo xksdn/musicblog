@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+
+<html layout:decorate="~{layout}"> <!-- layout.html 상속-->
+<div layout:fragment="content">
+    <div class="title_line">노래 목록</div>
+
+    <table class="table table-hover">
+        <colgroup>
+            <col style='width: 5%;'/>  <!-- 순서 -->
+            <col style='width: 20%;'/> <!-- 노래 제목 -->
+            <col style='width: 20%;'/> <!-- 가수 / 아티스트 -->
+            <col style='width: 15%;'/> <!-- 노래 장르 -->
+            <col style='width: 15%;'/> <!-- 노래 분위기 -->
+            <col style='width: 10%;'/> <!-- 발표 연도 -->
+            <col style='width: 10%;'/> <!-- 발표 지역 -->
+            <col style='width: 10%;'/> <!-- 등록 일자 -->
+        </colgroup>
+
+        <thead>
+        <tr>
+            <th class="th_bs">순서</th>
+            <th class="th_bs">노래 재목</th>
+            <th class="th_bs">가수 / 아티스트</th>
+            <th class="th_bs">노래 장르</th>
+            <th class="th_bs">노래 분위기</th>
+            <th class="th_bs">발배 연도</th>
+            <th class="th_bs">발배 지역</th>
+            <th class="th_bs">등록 일자</th>
+        </tr>
+        </thead>
+        <tbody>
+            <tr th:each="CategoryVO:${list}"> <!-- cateVO 갯수만큼 <tr> 태그가 생성됨. -->
+                <td class="th_bs" th:text="${CategoryVO.id}"></td>
+                <td class="th_bs" th:text="${CategoryVO.title}"></td>
+                <td class="th_bs" th:text="${CategoryVO.artist}"></td>
+                <td class="th_bs" th:text="${CategoryVO.genre}"></td>
+                <td class="th_bs" th:text="${CategoryVO.mood}"></td>
+                <td class="th_bs" th:text="${CategoryVO.era}"></td>
+                <td class="th_bs" th:text="${CategoryVO.region}"></td>
+                <td class="th_bs" th:text="${CategoryVO.rdate}"></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+</html>

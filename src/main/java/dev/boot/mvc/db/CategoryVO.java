@@ -1,6 +1,5 @@
 package dev.boot.mvc.db;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -25,16 +24,13 @@ public class CategoryVO {
   /* 노래 분위기 */ 
   private String mood;
   
-  /* 노래가 발표된 시대 */ 
+  /* 발매 연도 */ 
   private String era;
   
-  /* 노래가 만들어진 지역 */
+  /* 발매 지역 */
   private String region;
   
-  /* 노래 목적 */
-  private String purpose;
-  
-  /* 출력 모드 */
+  /* 공개 여부 */
   private String visible;
   
   /* 등록 일자 */

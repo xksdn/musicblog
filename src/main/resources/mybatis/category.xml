@@ -3,8 +3,14 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="dev.boot.mvc.db.CateDAOInter"> <!-- SB가 자동으로 구현하여 연동하는 interface -->
     <insert id="create" parameterType="dev.boot.mvc.db.CategoryVO">
-        INSERT INTO category (id, title, artist, genre, mood, era, region, purpose, visible, rdate)
-        VALUES(CATE_SEQ.nextval, #{title}, #{artist}, #{genre}, #{mood}, #{era}, #{region}, #{purpose}, #{visible}, SYSDATE)
+        INSERT INTO category (id, title, artist, genre, mood, era, region, visible, rdate)
+        VALUES(CATE_SEQ.nextval, #{title}, #{artist}, #{genre}, #{mood}, #{era}, #{region}, #{visible}, SYSDATE)
     </insert>
+
+    <select id="list_all" resultType="dev.boot.mvc.db.CategoryVO">
+        SELECT id, title, artist, genre, mood, era, region, rdate
+        FROM category
+        ORDER BY id ASC
+    </select>
 
 </mapper>
