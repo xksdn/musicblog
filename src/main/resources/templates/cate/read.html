@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+
+<html layout:decorate="~{layout}"> <!-- layout.html 상속-->
+<div layout:fragment="content">
+    <div class="title_line">노래 조회</div>
+
+    <div class="container mt-3"> <!--/* mt-3: margin top 16px */-->
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">번호: <span th:text="${categoryVO.id}"></span></li>
+            <li class="list-group-item">노래 제목: <span th:text="${categoryVO.title}"></span></li>
+            <li class="list-group-item">가수 / 아티스트: <span th:text="${categoryVO.artist}"></span></li>
+            <li class="list-group-item">노래 장르: <span th:text="${categoryVO.genre}"></span></li>
+            <li class="list-group-item">노래 분위기: <span th:text="${categoryVO.mood}"></span></li>
+            <li class="list-group-item">발표 연도: <span th:text="${categoryVO.era}"></span></li>
+            <li class="list-group-item">발표 지역: <span th:text="${categoryVO.region}"></span></li>
+            <li class="list-group-item">등록일: <span th:text="${categoryVO.rdate}"></span></li>
+        </ul>
+    </div>
+
+    <div class="content_body_bottom">
+        <button type="button" onclick="location.href='/cate/list_all'" class="btn btn-secondary btn-sm">목록</button>
+        <button type="button" th:onclick="|location.href='/cate/update?id=' + ${categoryVO.id}|" class="btn btn-secondary btn-sm">수정</button>
+        <button type="button" class="btn btn-secondary btn-sm">삭제</button>
+        <button type="button" onclick="location.href='/cate/create'" class="btn btn-secondary btn-sm">등록</button>
+    </div>
+
+</div>
+</html>

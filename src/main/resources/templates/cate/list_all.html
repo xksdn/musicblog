@@ -7,13 +7,13 @@
     <table class="table table-hover">
         <colgroup>
             <col style='width: 5%;'/>  <!-- 순서 -->
-            <col style='width: 20%;'/> <!-- 노래 제목 -->
-            <col style='width: 20%;'/> <!-- 가수 / 아티스트 -->
+            <col style='width: 15%;'/> <!-- 노래 제목 -->
+            <col style='width: 15%;'/> <!-- 가수 / 아티스트 -->
             <col style='width: 15%;'/> <!-- 노래 장르 -->
             <col style='width: 15%;'/> <!-- 노래 분위기 -->
             <col style='width: 10%;'/> <!-- 발표 연도 -->
             <col style='width: 10%;'/> <!-- 발표 지역 -->
-            <col style='width: 10%;'/> <!-- 등록 일자 -->
+            <col style='width: 20%;'/> <!-- 등록 일자 -->
         </colgroup>
 
         <thead>
@@ -25,19 +25,24 @@
             <th class="th_bs">노래 분위기</th>
             <th class="th_bs">발배 연도</th>
             <th class="th_bs">발배 지역</th>
-            <th class="th_bs">등록 일자</th>
+            <th class="th_bs">기타</th>
         </tr>
         </thead>
         <tbody>
             <tr th:each="CategoryVO:${list}"> <!-- cateVO 갯수만큼 <tr> 태그가 생성됨. -->
                 <td class="th_bs" th:text="${CategoryVO.id}"></td>
-                <td class="th_bs" th:text="${CategoryVO.title}"></td>
-                <td class="th_bs" th:text="${CategoryVO.artist}"></td>
+                <td class="th_bs">
+                    <a th:href="@{|./read?id=${CategoryVO.id}|}" th:text="${CategoryVO.title}" style="display: block;"></a>
+                </td>
+                <td class="th_bs">
+                    <a th:href="@{|./read?id=${CategoryVO.id}|}" th:text="${CategoryVO.artist}" style="display: block;"></a>
+                </td>
                 <td class="th_bs" th:text="${CategoryVO.genre}"></td>
                 <td class="th_bs" th:text="${CategoryVO.mood}"></td>
                 <td class="th_bs" th:text="${CategoryVO.era}"></td>
                 <td class="th_bs" th:text="${CategoryVO.region}"></td>
-                <td class="th_bs" th:text="${CategoryVO.rdate}"></td>
+                <td class="th_bs"><a th:href="@{|./update?id=${CategoryVO.id}|}">수정</a>/삭제</td>
+<!--                <td class="th_bs" th:text="${CategoryVO.rdate}"></td>-->
             </tr>
         </tbody>
     </table>

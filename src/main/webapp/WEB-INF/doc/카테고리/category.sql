@@ -9,7 +9,6 @@ CREATE TABLE category (
     mood VARCHAR2(50) NOT NULL, -- 분위기/감정
     era VARCHAR2(50) NOT NULL, -- 시대
     region VARCHAR2(50) NOT NULL, -- 국가/문화
-    purpose VARCHAR2(50) NOT NULL, -- 사용 목적
     visible CHAR(1) DEFAULT 'N' CHECK (visible IN ('Y', 'N')), -- 출력 모드
     rdate DATE DEFAULT SYSDATE -- 등록일
 );
@@ -22,6 +21,6 @@ ALTER SEQUENCE CATE_SEQ RESTART START WITH 1;
 
 
 
-SELECT id, title, artist, genre, mood, era, region, purpose, visible, rdate
+SELECT id, title, artist, genre, mood, era, region, visible, rdate
 FROM category
 ORDER BY id ASC;

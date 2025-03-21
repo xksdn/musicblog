@@ -27,7 +27,6 @@ class MusicblogApplicationTests {
 		cateVO.setMood("Funky");
 		cateVO.setEra("2020s");
 		cateVO.setRegion("Korea");
-		cateVO.setPurpose("Party");
 		cateVO.setVisible("Y");
 		cateVO.setRdate("2025-03-18");
 

@@ -13,4 +13,16 @@
         ORDER BY id ASC
     </select>
 
+    <select id="read" resultType="dev.boot.mvc.db.CategoryVO" parameterType="Integer">
+        SELECT id, title, artist, genre, mood, era, region, rdate, visible
+        FROM category
+        WHERE id = #{id}
+    </select>
+
+    <update id="update" parameterType="dev.boot.mvc.db.CategoryVO">
+        UPDATE category
+        SET title=#{title}, artist=#{artist}, genre=#{genre}, mood=#{mood}, era=#{era}, region=#{region}, visible=#{visible}, rdate=SYSDATE
+        WHERE id=#{id}
+    </update>
+
 </mapper>
