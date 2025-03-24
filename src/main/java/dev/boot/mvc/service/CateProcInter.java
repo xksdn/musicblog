@@ -15,4 +15,6 @@ public interface CateProcInter {
   public CategoryVO read(int id);
 
   public int update(CategoryVO categoryVO);
+
+  public int delete(int id);
 }

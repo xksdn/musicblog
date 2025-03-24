@@ -12,4 +12,10 @@ public class Tool {
 
   // 수정 실패
   public static final String UPDATE_FAIL = "update_fail";
+
+  // 삭제 성공
+  public static final String DELETE_SUCCESS = "delete_success";
+
+  // 삭제 실패
+  public static final String DELETE_FAIL = "delete_fail";
 }

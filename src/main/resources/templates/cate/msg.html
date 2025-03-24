@@ -27,6 +27,18 @@
                         <span class="span_success">노래 수정을 실패했습니다.</span><br>
                         수정 실패된 노래: <span th:text="${title}"></span>
                     </div>
+
+                    <div th:case="delete_success">
+                        <span class="span_success">노래를 삭제했습니다.</span><br>
+                        노래 제목: <span th:text="${title}"></span>
+                        가수 / 아티스트: <span th:text="${artist}"></span>
+                    </div>
+
+                    <div th:case="delete_fail">
+                        <span class="span_fail">노래 삭제에 실패했습니다.</span><br>
+                        노래 제목: <span th:text="${title}"></span>
+                        가수 / 아티스트: <span th:text="${artist}"></span>
+                    </div>
                 </li>
 
                 <li class="li_none">

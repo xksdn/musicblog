@@ -11,4 +11,6 @@ public interface CateDAOInter {
   public CategoryVO read(int id);
 
   public int update(CategoryVO categoryVO);
+
+  public int delete(int id);
 }

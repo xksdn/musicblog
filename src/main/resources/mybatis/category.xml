@@ -25,4 +25,9 @@
         WHERE id=#{id}
     </update>
 
+
+    <delete id="delete" parameterType="Integer">
+        DELETE FROM category WHERE id = #{id}
+    </delete>
+
 </mapper>

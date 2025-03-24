@@ -40,4 +40,11 @@ public class CateProc implements CateProcInter{
 
     return cnt;
   }
+
+  @Override
+  public int delete(int id) {
+    int cnt = this.cateDAOInter.delete(id);
+
+    return cnt;
+  }
 }

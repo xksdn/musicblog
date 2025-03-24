@@ -122,6 +122,40 @@ public class PageController {
     return "cate/msg";
   }
 
+  @GetMapping("/delete")
+  public String delete(Model model, @RequestParam(name = "id", defaultValue = "0") Integer id) {
+
+    CategoryVO categoryVO = this.cateProcInter.read(id);
+    model.addAttribute("categoryVO", categoryVO);
+
+    return "/cate/delete";
+
+  }
+
+
+  @PostMapping("/delete")
+  public String delete_process(
+          Model model,
+          @RequestParam(name = "id", defaultValue = "0") Integer id
+  ) {
+    CategoryVO categoryVO = this.cateProcInter.read(id);
+    model.addAttribute("categoryVO", categoryVO);
+
+    int cnt = this.cateProcInter.delete(id);
+
+    if (cnt == 1) {
+      model.addAttribute("code", Tool.DELETE_SUCCESS);
+    } else {
+      model.addAttribute("code", Tool.DELETE_FAIL);
+    }
+
+    model.addAttribute("title", categoryVO.getTitle());
+    model.addAttribute("artist", categoryVO.getArtist());
+    model.addAttribute("cnt", cnt);
+
+    return "/cate/msg";
+  }
+
 
 
 
