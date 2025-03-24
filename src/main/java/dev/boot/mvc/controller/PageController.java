@@ -47,9 +47,10 @@ public class PageController {
     int cnt = this.cateProcInter.create(categoryVO);
 
     if (cnt == 1) {
-      model.addAttribute("code", Tool.CREATE_SUCCESS);
-      model.addAttribute("title", categoryVO.getTitle());
-      model.addAttribute("artist", categoryVO.getArtist());
+//      model.addAttribute("code", Tool.CREATE_SUCCESS);
+//      model.addAttribute("title", categoryVO.getTitle());
+//      model.addAttribute("artist", categoryVO.getArtist());
+      return "redirect:/cate/list_all";
     } else {
       model.addAttribute("code", Tool.CREATE_FAIL);
     }
@@ -59,7 +60,10 @@ public class PageController {
 
 
   @GetMapping("/list_all")
-  public String list_all(Model model) {
+  public String list_all(Model model, @ModelAttribute("categoryVO") CategoryVO categoryVO) {
+    model.addAttribute("categoryVO", categoryVO);
+
+
     ArrayList<CategoryVO> list = this.cateProcInter.list_all();
     model.addAttribute("list", list);
 
