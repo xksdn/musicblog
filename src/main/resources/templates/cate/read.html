@@ -4,25 +4,97 @@
 <div layout:fragment="content">
     <div class="title_line">노래 조회</div>
 
-    <div class="container mt-3"> <!--/* mt-3: margin top 16px */-->
+    <aside class="aside_right">
+        <a href="javascript: location.reload();">새로 고침</a> |
+        <a th:href="@{|/cate/list_all|}">목록</a> |
+        <a th:href="@{|/cate/update?id=${categoryVO.id}|}">수정</a> |
+        <a th:href="@{|/cate/delete?id=${categoryVO.id}|}">삭제</a> |
+        <a th:href="@{|/cate/create|}">등록</a>
+    </aside>
+    <div class="menu_line"></div>
+
+<!--    <div class="container mt-3"> &lt;!&ndash;/* mt-3: margin top 16px */&ndash;&gt;-->
+<!--        <ul class="list-group list-group-flush">-->
+<!--            <li class="list-group-item">번호: <span th:text="${categoryVO.id}"></span></li>-->
+<!--            <li class="list-group-item">노래 제목: <span th:text="${categoryVO.title}"></span></li>-->
+<!--            <li class="list-group-item">가수 / 아티스트: <span th:text="${categoryVO.artist}"></span></li>-->
+<!--            <li class="list-group-item">노래 장르: <span th:text="${categoryVO.genre}"></span></li>-->
+<!--            <li class="list-group-item">노래 분위기: <span th:text="${categoryVO.mood}"></span></li>-->
+<!--            <li class="list-group-item">발표 연도: <span th:text="${categoryVO.era}"></span></li>-->
+<!--            <li class="list-group-item">발표 지역: <span th:text="${categoryVO.region}"></span></li>-->
+<!--            <li class="list-group-item">등록일: <span th:text="${categoryVO.rdate}"></span></li>-->
+<!--        </ul>-->
+<!--    </div>-->
+
+    <div class="container mt-3" style="width: 70%; margin: 5px auto;"> <!--/* mt-3: margin top 16px */-->
         <ul class="list-group list-group-flush">
-            <li class="list-group-item">번호: <span th:text="${categoryVO.id}"></span></li>
-            <li class="list-group-item">노래 제목: <span th:text="${categoryVO.title}"></span></li>
-            <li class="list-group-item">가수 / 아티스트: <span th:text="${categoryVO.artist}"></span></li>
-            <li class="list-group-item">노래 장르: <span th:text="${categoryVO.genre}"></span></li>
-            <li class="list-group-item">노래 분위기: <span th:text="${categoryVO.mood}"></span></li>
-            <li class="list-group-item">발표 연도: <span th:text="${categoryVO.era}"></span></li>
-            <li class="list-group-item">발표 지역: <span th:text="${categoryVO.region}"></span></li>
-            <li class="list-group-item">등록일: <span th:text="${categoryVO.rdate}"></span></li>
+            <li class="list-group-item">
+                번호: <span th:text="${categoryVO.id}" style="margin-right: 40px;"></span>
+                노래 제목: <span th:text="${categoryVO.title}" style="margin-right: 40px;"></span>
+                가수: <span th:text="${categoryVO.artist}"></span>
+            </li>
+            <li class="list-group-item">
+                노래 장르: <span th:text="${categoryVO.genre}" style="margin-right: 20px;"></span>
+                노래 분위기: <span th:text="${categoryVO.mood}" style="margin-right: 20px;"></span>
+                발매 연도: <span th:text="${categoryVO.era}" style="margin-right: 20px;"></span>
+                발매 지역: <span th:text="${categoryVO.region}" style="margin-right: 20px;"></span>
+                등록일: <span th:text="${categoryVO.rdate}"></span>
+            </li>
         </ul>
     </div>
 
-    <div class="content_body_bottom">
-        <button type="button" onclick="location.href='/cate/list_all'" class="btn btn-secondary btn-sm">목록</button>
-        <button type="button" th:onclick="|location.href='/cate/update?id=' + ${categoryVO.id}|" class="btn btn-secondary btn-sm">수정</button>
-        <button type="button" class="btn btn-secondary btn-sm">삭제</button>
-        <button type="button" onclick="location.href='/cate/create'" class="btn btn-secondary btn-sm">등록</button>
-    </div>
+<!--    <div class="content_body_bottom">-->
+<!--        <button type="button" onclick="location.href='/cate/list_all'" class="btn btn-secondary btn-sm">목록</button>-->
+<!--        <button type="button" th:onclick="|location.href='/cate/update?id=' + ${categoryVO.id}|" class="btn btn-secondary btn-sm">수정</button>-->
+<!--        <button type="button" class="btn btn-secondary btn-sm">삭제</button>-->
+<!--        <button type="button" onclick="location.href='/cate/create'" class="btn btn-secondary btn-sm">등록</button>-->
+<!--    </div>-->
+
+    <table class="table table-hover">
+        <colgroup>
+            <col style='width: 5%;'/>  <!-- 순서 -->
+            <col style='width: 15%;'/> <!-- 노래 제목 -->
+            <col style='width: 15%;'/> <!-- 가수 / 아티스트 -->
+            <col style='width: 15%;'/> <!-- 노래 장르 -->
+            <col style='width: 15%;'/> <!-- 노래 분위기 -->
+            <col style='width: 10%;'/> <!-- 발표 연도 -->
+            <col style='width: 10%;'/> <!-- 발표 지역 -->
+            <col style='width: 20%;'/> <!-- 등록 일자 -->
+        </colgroup>
+
+        <thead>
+        <tr>
+            <th class="th_bs">순서</th>
+            <th class="th_bs">노래 재목</th>
+            <th class="th_bs">가수 / 아티스트</th>
+            <th class="th_bs">노래 장르</th>
+            <th class="th_bs">노래 분위기</th>
+            <th class="th_bs">발배 연도</th>
+            <th class="th_bs">발배 지역</th>
+            <th class="th_bs">수정/삭제</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="CategoryVO, status : ${list}"> <!-- cateVO 갯수만큼 <tr> 태그가 생성됨. -->
+            <td class="th_bs" th:text="${status.count}"></td>
+            <td class="th_bs">
+                <a th:href="@{|./read?id=${CategoryVO.id}|}" th:text="${CategoryVO.title}" style="display: block;"></a>
+            </td>
+            <td class="th_bs">
+                <a th:href="@{|./read?id=${CategoryVO.id}|}" th:text="${CategoryVO.artist}" style="display: block;"></a>
+            </td>
+            <td class="th_bs" th:text="${CategoryVO.genre}"></td>
+            <td class="th_bs" th:text="${CategoryVO.mood}"></td>
+            <td class="th_bs" th:text="${CategoryVO.era}"></td>
+            <td class="th_bs" th:text="${CategoryVO.region}"></td>
+            <td class="th_bs">
+                <a th:href="@{|./update?id=${CategoryVO.id}|}"><img src="/cate/images/update.png" class="icon" title="수정" style="margin-right: 5px"></a>
+                <a th:href="@{|./delete?id=${CategoryVO.id}|}"><img src="/cate/images/delete.png" class="icon" title="삭제"></a>
+            </td>
+            <!--                <td class="th_bs" th:text="${CategoryVO.rdate}"></td>-->
+        </tr>
+        </tbody>
+    </table>
 
 </div>
 </html>

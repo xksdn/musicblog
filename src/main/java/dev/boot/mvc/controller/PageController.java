@@ -79,8 +79,10 @@ public class PageController {
           Model model,
           @RequestParam(name = "id", defaultValue = "0") Integer id
   ) {
-    CategoryVO categoryVO = this.cateProcInter.read(id);
+    ArrayList<CategoryVO> list = this.cateProcInter.list_all();
+    model.addAttribute("list", list);
 
+    CategoryVO categoryVO = this.cateProcInter.read(id);
     model.addAttribute("categoryVO", categoryVO);
 
     return "cate/read"; // templates/cate/read.html
@@ -91,6 +93,10 @@ public class PageController {
           Model model,
           @RequestParam(name = "id", defaultValue = "0") Integer id
   ){
+
+    ArrayList<CategoryVO> list = this.cateProcInter.list_all();
+    model.addAttribute("list", list);
+
     CategoryVO categoryVO = this.cateProcInter.read(id);
     model.addAttribute("categoryVO", categoryVO);
 //
@@ -104,6 +110,9 @@ public class PageController {
 
   @PostMapping("/update")
   public String update(Model model, @Valid CategoryVO categoryVO, BindingResult bindingResult) {
+    ArrayList<CategoryVO> list = this.cateProcInter.list_all();
+    model.addAttribute("list", list);
+
     if (bindingResult.hasErrors()) {
       return "cate/update";
     }
@@ -111,8 +120,9 @@ public class PageController {
     int cnt = this.cateProcInter.update(categoryVO);
 
     if (cnt == 1) {
-      model.addAttribute("code", Tool.UPDATE_SUCCESS);
-      model.addAttribute("title", categoryVO.getTitle());
+//      model.addAttribute("code", Tool.UPDATE_SUCCESS);
+//      model.addAttribute("title", categoryVO.getTitle());
+      return "redirect:/cate/update?id=" + categoryVO.getId();
     } else {
       model.addAttribute("code", Tool.UPDATE_FAIL);
     }
@@ -128,6 +138,8 @@ public class PageController {
 
   @GetMapping("/delete")
   public String delete(Model model, @RequestParam(name = "id", defaultValue = "0") Integer id) {
+    ArrayList<CategoryVO> list = this.cateProcInter.list_all();
+    model.addAttribute("list", list);
 
     CategoryVO categoryVO = this.cateProcInter.read(id);
     model.addAttribute("categoryVO", categoryVO);
@@ -145,10 +157,14 @@ public class PageController {
     CategoryVO categoryVO = this.cateProcInter.read(id);
     model.addAttribute("categoryVO", categoryVO);
 
+    ArrayList<CategoryVO> list = this.cateProcInter.list_all();
+    model.addAttribute("list", list);
+
     int cnt = this.cateProcInter.delete(id);
 
     if (cnt == 1) {
-      model.addAttribute("code", Tool.DELETE_SUCCESS);
+//      model.addAttribute("code", Tool.DELETE_SUCCESS);
+      return "redirect:/cate/list_all";
     } else {
       model.addAttribute("code", Tool.DELETE_FAIL);
     }
