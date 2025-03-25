@@ -74,10 +74,10 @@ public class PageController {
   // 조회
   // http://localhost:9092/cate/read?cateno=1
   // http://localhost:9092/cate/read/1
-  @GetMapping("/read")
+  @GetMapping("/read/{id}")
   public String read(
           Model model,
-          @RequestParam(name = "id", defaultValue = "0") Integer id
+          @PathVariable("id") Integer id
   ) {
     ArrayList<CategoryVO> list = this.cateProcInter.list_all();
     model.addAttribute("list", list);
@@ -88,10 +88,10 @@ public class PageController {
     return "cate/read"; // templates/cate/read.html
   }
 
-  @GetMapping("/update")
+  @GetMapping("/update/{id}")
   public String update(
           Model model,
-          @RequestParam(name = "id", defaultValue = "0") Integer id
+          @PathVariable("id") Integer id
   ){
 
     ArrayList<CategoryVO> list = this.cateProcInter.list_all();
@@ -122,7 +122,7 @@ public class PageController {
     if (cnt == 1) {
 //      model.addAttribute("code", Tool.UPDATE_SUCCESS);
 //      model.addAttribute("title", categoryVO.getTitle());
-      return "redirect:/cate/update?id=" + categoryVO.getId();
+      return "redirect:/cate/update/" + categoryVO.getId();
     } else {
       model.addAttribute("code", Tool.UPDATE_FAIL);
     }
@@ -136,8 +136,8 @@ public class PageController {
     return "cate/msg";
   }
 
-  @GetMapping("/delete")
-  public String delete(Model model, @RequestParam(name = "id", defaultValue = "0") Integer id) {
+  @GetMapping("/delete/{id}")
+  public String delete(Model model, @PathVariable("id") Integer id) {
     ArrayList<CategoryVO> list = this.cateProcInter.list_all();
     model.addAttribute("list", list);
 
@@ -149,10 +149,10 @@ public class PageController {
   }
 
 
-  @PostMapping("/delete")
+  @PostMapping("/delete/{id}")
   public String delete_process(
           Model model,
-          @RequestParam(name = "id", defaultValue = "0") Integer id
+          @PathVariable("id") Integer id
   ) {
     CategoryVO categoryVO = this.cateProcInter.read(id);
     model.addAttribute("categoryVO", categoryVO);

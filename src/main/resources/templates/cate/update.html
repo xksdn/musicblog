@@ -7,7 +7,7 @@
     <aside class="aside_right">
         <a href="javascript: location.reload();">새로 고침</a> |
         <a th:href="@{|/cate/list_all|}">목록</a> |
-        <a th:href="@{|/cate/delete?id=${categoryVO.id}|}">삭제</a> |
+        <a th:href="@{|/cate/delete/${categoryVO.id}|}">삭제</a> |
         <a th:href="@{|/cate/create|}">등록</a>
     </aside>
     <div class="menu_line"></div>
@@ -79,51 +79,6 @@
 
         </form>
     </div>
-    <div>
-        <table class="table table-hover">
-            <colgroup>
-                <col style='width: 5%;'/>  <!-- 순서 -->
-                <col style='width: 15%;'/> <!-- 노래 제목 -->
-                <col style='width: 15%;'/> <!-- 가수 / 아티스트 -->
-                <col style='width: 15%;'/> <!-- 노래 장르 -->
-                <col style='width: 15%;'/> <!-- 노래 분위기 -->
-                <col style='width: 10%;'/> <!-- 발표 연도 -->
-                <col style='width: 10%;'/> <!-- 발표 지역 -->
-                <col style='width: 20%;'/> <!-- 등록 일자 -->
-            </colgroup>
+    <div th:replace="~{cate/list_all_com::list_all_fragment}"></div>
 
-            <thead>
-            <tr>
-                <th class="th_bs">순서</th>
-                <th class="th_bs">노래 재목</th>
-                <th class="th_bs">가수 / 아티스트</th>
-                <th class="th_bs">노래 장르</th>
-                <th class="th_bs">노래 분위기</th>
-                <th class="th_bs">발배 연도</th>
-                <th class="th_bs">발배 지역</th>
-                <th class="th_bs">수정/삭제</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="CategoryVO, status : ${list}"> <!-- cateVO 갯수만큼 <tr> 태그가 생성됨. -->
-                <td class="th_bs" th:text="${status.count}"></td>
-                <td class="th_bs">
-                    <a th:href="@{|./read?id=${CategoryVO.id}|}" th:text="${CategoryVO.title}" style="display: block;"></a>
-                </td>
-                <td class="th_bs">
-                    <a th:href="@{|./read?id=${CategoryVO.id}|}" th:text="${CategoryVO.artist}" style="display: block;"></a>
-                </td>
-                <td class="th_bs" th:text="${CategoryVO.genre}"></td>
-                <td class="th_bs" th:text="${CategoryVO.mood}"></td>
-                <td class="th_bs" th:text="${CategoryVO.era}"></td>
-                <td class="th_bs" th:text="${CategoryVO.region}"></td>
-                <td class="th_bs">
-                    <a th:href="@{|./update?id=${CategoryVO.id}|}"><img src="/cate/images/update.png" class="icon" title="수정" style="margin-right: 5px"></a>
-                    <a th:href="@{|./delete?id=${CategoryVO.id}|}"><img src="/cate/images/delete.png" class="icon" title="삭제"></a>
-                </td>
-                <!--                <td class="th_bs" th:text="${CategoryVO.rdate}"></td>-->
-            </tr>
-            </tbody>
-        </table>
-    </div>
 </html>
