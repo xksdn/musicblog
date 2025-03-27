@@ -47,4 +47,18 @@ public class CateProc implements CateProcInter{
 
     return cnt;
   }
+
+  @Override
+  public int update_seqno_forward(int id) {
+    int cnt = this.cateDAOInter.update_seqno_forward(id);
+
+    return cnt;
+  }
+
+  @Override
+  public int update_seqno_backward(int id) {
+    int cnt = this.cateDAOInter.update_seqno_backward(id);
+
+    return cnt;
+  }
 }

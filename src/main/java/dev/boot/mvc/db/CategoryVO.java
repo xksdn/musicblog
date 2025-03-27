@@ -36,4 +36,7 @@ public class CategoryVO {
   /* 등록 일자 */
   private String rdate;
 
+  /* 우선 순위 */
+  private int seqno;
+
 }

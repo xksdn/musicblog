@@ -177,6 +177,23 @@ public class PageController {
   }
 
 
+  // 우선순위 높임 , 10등 -> 1등
+  // http://localhost:9091/update_seqno_forward/1
+  @GetMapping("/update_seqno_forward/{id}")
+  public String update_seqno_forward(Model model, @PathVariable("id") Integer id) {
+    this.cateProcInter.update_seqno_forward(id);
+
+    return "redirect:/cate/list_all";
+  }
+
+  // 우선순위 낮춤 , 1등 -> 10등
+  // http://localhost:9091/update_seqno_backward/1
+  @GetMapping("/update_seqno_backward/{id}")
+  public String update_seqno_backward(Model model, @PathVariable("id") Integer id) {
+    this.cateProcInter.update_seqno_backward(id);
+
+    return "redirect:/cate/list_all";
+  }
 
 
 }

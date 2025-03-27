@@ -5,10 +5,14 @@
     <div class="title_line">노래 조회</div>
 
     <aside class="aside_right">
-        <a href="javascript: location.reload();">새로 고침</a> |
-        <a th:href="@{|/cate/list_all|}">목록</a> |
-        <a th:href="@{|/cate/update/${categoryVO.id}|}">수정</a> |
-        <a th:href="@{|/cate/delete/${categoryVO.id}|}">삭제</a> |
+        <a href="javascript: location.reload();">새로 고침</a>
+        <span class="menu_divide"> | </span>
+        <a th:href="@{|/cate/list_all|}">목록</a>
+        <span class="menu_divide"> | </span>
+        <a th:href="@{|/cate/update/${categoryVO.id}|}">수정</a>
+        <span class="menu_divide"> | </span>
+        <a th:href="@{|/cate/delete/${categoryVO.id}|}">삭제</a>
+        <span class="menu_divide"> | </span>
         <a th:href="@{|/cate/create|}">등록</a>
     </aside>
     <div class="menu_line"></div>

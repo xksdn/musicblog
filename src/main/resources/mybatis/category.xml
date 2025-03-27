@@ -8,13 +8,13 @@
     </insert>
 
     <select id="list_all" resultType="dev.boot.mvc.db.CategoryVO">
-        SELECT id, title, artist, genre, mood, era, region, rdate
+        SELECT id, title, artist, genre, mood, era, region, rdate, seqno
         FROM category
-        ORDER BY id ASC
+        ORDER BY seqno ASC
     </select>
 
     <select id="read" resultType="dev.boot.mvc.db.CategoryVO" parameterType="Integer">
-        SELECT id, title, artist, genre, mood, era, region, rdate, visible
+        SELECT id, title, artist, genre, mood, era, region, rdate, visible, seqno
         FROM category
         WHERE id = #{id}
     </select>
@@ -29,5 +29,17 @@
     <delete id="delete" parameterType="Integer">
         DELETE FROM category WHERE id = #{id}
     </delete>
+
+    <update id="update_seqno_forward" parameterType="Integer">
+        UPDATE category
+        SET seqno=seqno-1
+        WHERE id=#{id}
+    </update>
+
+    <update id="update_seqno_backward" parameterType="Integer">
+        UPDATE category
+        SET seqno=seqno+1
+        WHERE id=#{id}
+    </update>
 
 </mapper>

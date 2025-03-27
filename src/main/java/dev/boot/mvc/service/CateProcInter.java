@@ -17,4 +17,8 @@ public interface CateProcInter {
   public int update(CategoryVO categoryVO);
 
   public int delete(int id);
+
+  public int update_seqno_forward(int id);
+
+  public int update_seqno_backward(int id);
 }
