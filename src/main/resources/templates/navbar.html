@@ -10,17 +10,27 @@
                     aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
+
+
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a th:href="@{/cate/create}" class="nav-link">노래 등록</a>
-                    </li>
+                    <li class="nav-item dropdown" th:each="MenuVO:${menu}">
 
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink"
+                           role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="${MenuVO.genre}">
+
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <li th:each="CategoryVO:${MenuVO.list_name}"><a class="dropdown-item" href="#" th:text="${CategoryVO.era}"></a></li>
+                        </ul>
+
+                    </li>
                     <li class="nav-item">
                         <a th:href="@{/cate/list_all}" class="nav-link">노래 목록</a>
                     </li>
                 </ul>
             </div>
+
         </div>
     </nav>
 </div>

@@ -31,7 +31,7 @@ public class CategoryVO {
   private String region;
   
   /* 공개 여부 */
-  private String visible;
+  private String visible = "N";
   
   /* 등록 일자 */
   private String rdate;

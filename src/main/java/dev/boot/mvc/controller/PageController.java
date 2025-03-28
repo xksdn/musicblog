@@ -2,11 +2,13 @@ package dev.boot.mvc.controller;
 
 import dev.boot.mvc.db.CateDAOInter;
 import dev.boot.mvc.db.CategoryVO;
+import dev.boot.mvc.db.MenuVO;
 import dev.boot.mvc.service.CateProcInter;
 import dev.boot.mvc.tool.Tool;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -20,19 +22,12 @@ import java.util.ArrayList;
 public class PageController {
 
   @Autowired
-  private CateDAOInter cateDAOInter;
-  @Autowired
   private CateProcInter cateProcInter;
 
 
-  @GetMapping("/")
-  public String page() {
-    return "index";
-  }
-
   @GetMapping("/create")
   public String create(@ModelAttribute("categoryVO")CategoryVO categoryVO) {
-    System.out.println("-> http://localhost:9092/cate/create");
+//    System.out.println("-> http://localhost:9092/cate/create");
     return "/cate/create";
   }
 
@@ -63,12 +58,14 @@ public class PageController {
   public String list_all(Model model, @ModelAttribute("categoryVO") CategoryVO categoryVO) {
     model.addAttribute("categoryVO", categoryVO);
 
-
     ArrayList<CategoryVO> list = this.cateProcInter.list_all();
     model.addAttribute("list", list);
 
-    return "/cate/list_all";
+    ArrayList<MenuVO> menu = this.cateProcInter.menu();
+    model.addAttribute("menu", menu);
 
+
+    return "/cate/list_all";
   }
 
   // 조회
@@ -85,6 +82,9 @@ public class PageController {
     CategoryVO categoryVO = this.cateProcInter.read(id);
     model.addAttribute("categoryVO", categoryVO);
 
+    ArrayList<MenuVO> menu = this.cateProcInter.menu();
+    model.addAttribute("menu", menu);
+
     return "cate/read"; // templates/cate/read.html
   }
 
@@ -99,6 +99,9 @@ public class PageController {
 
     CategoryVO categoryVO = this.cateProcInter.read(id);
     model.addAttribute("categoryVO", categoryVO);
+
+    ArrayList<MenuVO> menu = this.cateProcInter.menu();
+    model.addAttribute("menu", menu);
 //
 //    System.out.println("title: " + categoryVO.getTitle());
 //    System.out.println("artist: " + categoryVO.getArtist());
@@ -143,6 +146,9 @@ public class PageController {
 
     CategoryVO categoryVO = this.cateProcInter.read(id);
     model.addAttribute("categoryVO", categoryVO);
+
+    ArrayList<MenuVO> menu = this.cateProcInter.menu();
+    model.addAttribute("menu", menu);
 
     return "/cate/delete";
 
@@ -191,6 +197,29 @@ public class PageController {
   @GetMapping("/update_seqno_backward/{id}")
   public String update_seqno_backward(Model model, @PathVariable("id") Integer id) {
     this.cateProcInter.update_seqno_backward(id);
+
+    return "redirect:/cate/list_all";
+  }
+
+
+  @GetMapping("/update_visible_y/{id}")
+  public String update_visible_y(
+          Model model,
+          @PathVariable("id") Integer id
+  ) {
+    this.cateProcInter.update_visible_y(id);
+//    System.out.println("->update_visible_y");
+
+    return "redirect:/cate/list_all";
+  }
+
+  @GetMapping("/update_visible_n/{id}")
+  public String update_visible_n(
+          Model model,
+          @PathVariable("id") Integer id
+  ) {
+    this.cateProcInter.update_visible_n(id);
+//    System.out.println("->update_visible_y");
 
     return "redirect:/cate/list_all";
   }

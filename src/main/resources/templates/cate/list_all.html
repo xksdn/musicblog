@@ -28,16 +28,22 @@
                        class="form-control fom-control-sm" style="width: 100%; margin-bottom: 5px" th:field="*{mood}" placeholder="어울리는 분위기">
             </div>
             <div style="margin-right: 2px; width: 10%; float: left;">
-                <input type="text" name="era" value="" autofocus="autofocus"
+                <input type="text" name="era" value="" autofocus="autofocus" list="yearList"
                        class="form-control fom-control-sm" style="width: 100%; margin-bottom: 5px" th:field="*{era}" placeholder="발표된 시대">
+                <datalist id="yearList">
+                    <option th:each="year : ${#numbers.sequence(2025, 1900, -1)}" th:value="${year}" th:text="${year}"></option>
+                </datalist>
             </div>
             <div style="margin-right: 2px; width: 10%; float: left;">
                 <input type="text" name="region" value="" autofocus="autofocus"
                        class="form-control fom-control-sm" style="width: 100%; margin-bottom: 5px" th:field="*{region}" placeholder="발표 지역">
             </div>
             <div style="margin-right: 2px; width: 12%; float: left;">
-                <input type="text" name="visible" value="Y"
-                       class="form-control fom-control-sm" style="width: 100%; margin-bottom: 5px" th:field="*{visible}" placeholder="공개 여부(Y/N)">
+                <select id="visible" name="visible" class="form-control">
+                    <option value="출력 모드" selected="selected">출력 모드</option>
+                    <option value="Y">Y</option>
+                    <option value="N">N</option>
+                </select>
             </div>
             <div style="margin-right: 2px; width: 13%; float: left; margin-top: 3px; margin-left: 5px;">
                 <button type="submit" class="btn btn-secondary btn-sm">등록</button>

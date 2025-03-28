@@ -17,4 +17,15 @@ public interface CateDAOInter {
   public int update_seqno_forward(int id);
 
   public int update_seqno_backward(int id);
+
+  // 공개 설정
+  public int update_visible_y(int cateno);
+
+  // 비공개 설정
+  public int update_visible_n(int cateno);
+
+  public ArrayList<CategoryVO> list_all_grp_y();
+
+  public ArrayList<CategoryVO> list_all_name_y(String genre);
+
 }

@@ -25,3 +25,10 @@ ALTER SEQUENCE CATE_SEQ RESTART START WITH 1;
 SELECT id, title, artist, genre, mood, era, region, visible, rdate
 FROM category
 ORDER BY id ASC;
+
+
+SELECT visible
+FROM category
+ORDER BY id ASC;
+
+SELECT id, title, visible FROM category WHERE visible IS NULL;

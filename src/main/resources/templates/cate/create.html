@@ -39,8 +39,11 @@
             </div>
             <div>
                 <label>발표된 시대</label>
-                <input type="text" name="era" value="" autofocus="autofocus"
+                <input type="number" name="era" value="" autofocus="autofocus" list="yearList"
                        class="form-control fom-control-sm" style="width: 70%; margin-bottom: 5px" th:field="*{era}">
+                <datalist id="yearList">
+                    <option th:each="year : ${#numbers.sequence(2025, 1900, -1)}" th:value="${year}" th:text="${year}"></option>
+                </datalist>
                 <div th:if="${#fields.hasErrors('era')}" class="alert alert-danger" role="alert" style="margin-top: 5px;">
                     <div th:each="err: ${#lists.sort(#fields.errors('era'))}" th:text="${err}"></div>
                 </div>
@@ -55,10 +58,10 @@
             </div>
             <div>
                 <label>공개 여부(Y/N)</label>
-                <input type="text" name="visible" value="Y"
-                       class="form-control fom-control-sm" style="width: 70%; margin-bottom: 5px" th:field="*{visible}">
-                <div th:if="${#fields.hasErrors('visible')}" class="alert alert-danger" role="alert" style="margin-top: 5px;">
-                    <div th:each="err: ${#lists.sort(#fields.errors('visible'))}" th:text="${err}"></div>
+                <input type="number" name="seqno" value="1" min="1" max="1000000" step="1"
+                       class="form-control fom-control-sm" style="width: 50%;" th:field="*{seqno}">
+                <div th:if="${#fields.hasErrors('seqno')}" class="alert alert-danger" role="alert" style="margin-top: 5px;">
+                    <div th:each="err: ${#lists.sort(#fields.errors('seqno'))}" th:text="${err}"></div>
                 </div>
             </div>
             <div class="content_body_bottom">
