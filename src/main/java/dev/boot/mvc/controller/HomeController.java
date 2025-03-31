@@ -19,6 +19,7 @@ public class HomeController {
   public String page(Model model) {
     ArrayList<MenuVO> menu = this.cateProcInter.menu();
     model.addAttribute("menu", menu);
+    model.addAttribute("word", "");
 
     return "index";
   }

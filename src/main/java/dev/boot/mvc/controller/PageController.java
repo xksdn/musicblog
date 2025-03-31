@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
 
@@ -34,23 +35,27 @@ public class PageController {
 
 
   @PostMapping("/create")
-  public String create(Model model, @Valid CategoryVO categoryVO, BindingResult bindingResult) {
+  public String create(
+          Model model,
+          @Valid CategoryVO categoryVO,
+          BindingResult bindingResult,
+          @RequestParam(name = "word", defaultValue = "") String word,
+          RedirectAttributes ra
+  ) {
     if (bindingResult.hasErrors()) {
       return "/cate/create";
-    }
-
-    int cnt = this.cateProcInter.create(categoryVO);
-
-    if (cnt == 1) {
-//      model.addAttribute("code", Tool.CREATE_SUCCESS);
-//      model.addAttribute("title", categoryVO.getTitle());
-//      model.addAttribute("artist", categoryVO.getArtist());
-      return "redirect:/cate/list_all";
     } else {
-      model.addAttribute("code", Tool.CREATE_FAIL);
-    }
+      int cnt = this.cateProcInter.create(categoryVO);
 
-    return "/cate/msg";
+      if (cnt == 1) {
+        ra.addAttribute("word", word);
+        return "redirect:/cate/list_search";
+      } else {
+        model.addAttribute("code", "create_fail");
+        model.addAttribute("cnt", cnt);
+        return "/cate/msg";
+      }
+    }
   }
 
 
@@ -68,13 +73,37 @@ public class PageController {
     return "/cate/list_all";
   }
 
+  @GetMapping("/list_search")
+  public String list_search(
+          Model model,
+          @ModelAttribute("categoryVO") CategoryVO categoryVO,
+          @RequestParam(name = "word", defaultValue = "") String word
+  ) {
+    ArrayList<CategoryVO> list = this.cateProcInter.list_search(word);
+    model.addAttribute("list", list);
+
+    ArrayList<MenuVO> menu = this.cateProcInter.menu();
+    model.addAttribute("menu", menu);
+
+    model.addAttribute("word", word);
+
+    int list_search_count = this.cateProcInter.list_search_count(word);
+    model.addAttribute("list_search_count", list_search_count);
+
+    return "cate/list_search";
+
+  }
+
+
+
   // 조회
   // http://localhost:9092/cate/read?cateno=1
   // http://localhost:9092/cate/read/1
   @GetMapping("/read/{id}")
   public String read(
           Model model,
-          @PathVariable("id") Integer id
+          @PathVariable("id") Integer id,
+          @RequestParam(name = "word", defaultValue = "") String word
   ) {
     ArrayList<CategoryVO> list = this.cateProcInter.list_all();
     model.addAttribute("list", list);
@@ -85,13 +114,20 @@ public class PageController {
     ArrayList<MenuVO> menu = this.cateProcInter.menu();
     model.addAttribute("menu", menu);
 
+    ArrayList<CategoryVO> list1 = this.cateProcInter.list_search(word);
+    model.addAttribute("list1", list1);
+
+    int list_search_count = this.cateProcInter.list_search_count(word);
+    model.addAttribute("list_search_count", list_search_count);
+
     return "cate/read"; // templates/cate/read.html
   }
 
   @GetMapping("/update/{id}")
   public String update(
           Model model,
-          @PathVariable("id") Integer id
+          @PathVariable("id") Integer id,
+          @RequestParam(name = "word", defaultValue = "") String word
   ){
 
     ArrayList<CategoryVO> list = this.cateProcInter.list_all();
@@ -102,6 +138,9 @@ public class PageController {
 
     ArrayList<MenuVO> menu = this.cateProcInter.menu();
     model.addAttribute("menu", menu);
+
+    ArrayList<CategoryVO> list1 = this.cateProcInter.list_search(word);
+    model.addAttribute("word", word);
 //
 //    System.out.println("title: " + categoryVO.getTitle());
 //    System.out.println("artist: " + categoryVO.getArtist());
@@ -112,35 +151,36 @@ public class PageController {
   }
 
   @PostMapping("/update")
-  public String update(Model model, @Valid CategoryVO categoryVO, BindingResult bindingResult) {
+  public String update(Model model,
+                       @Valid CategoryVO categoryVO,
+                       BindingResult bindingResult,
+                       @RequestParam(name = "word", defaultValue = "") String word,
+                       RedirectAttributes ra
+  ) {
     ArrayList<CategoryVO> list = this.cateProcInter.list_all();
     model.addAttribute("list", list);
 
     if (bindingResult.hasErrors()) {
       return "cate/update";
-    }
-
-    int cnt = this.cateProcInter.update(categoryVO);
-
-    if (cnt == 1) {
-//      model.addAttribute("code", Tool.UPDATE_SUCCESS);
-//      model.addAttribute("title", categoryVO.getTitle());
-      return "redirect:/cate/update/" + categoryVO.getId();
     } else {
-      model.addAttribute("code", Tool.UPDATE_FAIL);
+      int cnt = this.cateProcInter.update(categoryVO);
+
+      if (cnt == 1) {
+        ra.addAttribute("word", word);
+        return "redirect:/cate/update/" + String.valueOf(categoryVO.getId());
+      } else {
+        model.addAttribute("code", Tool.UPDATE_FAIL);
+        model.addAttribute("cnt", cnt);
+        return "cate/msg";
+      }
     }
-//    System.out.println("cnt: " + cnt);
-//    System.out.println("title: " + categoryVO.getTitle());
-//    System.out.println("artist: " + categoryVO.getArtist());
-//    System.out.println("genre: " + categoryVO.getGenre());
-
-
-
-    return "cate/msg";
   }
 
   @GetMapping("/delete/{id}")
-  public String delete(Model model, @PathVariable("id") Integer id) {
+  public String delete(Model model,
+                       @PathVariable("id") Integer id,
+                       @RequestParam(name = "word", defaultValue = "") String word
+  ) {
     ArrayList<CategoryVO> list = this.cateProcInter.list_all();
     model.addAttribute("list", list);
 
@@ -150,6 +190,9 @@ public class PageController {
     ArrayList<MenuVO> menu = this.cateProcInter.menu();
     model.addAttribute("menu", menu);
 
+    ArrayList<CategoryVO> list1 = this.cateProcInter.list_search(word);
+    model.addAttribute("word", word);
+
     return "/cate/delete";
 
   }
@@ -158,7 +201,9 @@ public class PageController {
   @PostMapping("/delete/{id}")
   public String delete_process(
           Model model,
-          @PathVariable("id") Integer id
+          @PathVariable("id") Integer id,
+          @RequestParam(name = "word", defaultValue = "") String word,
+          RedirectAttributes ra
   ) {
     CategoryVO categoryVO = this.cateProcInter.read(id);
     model.addAttribute("categoryVO", categoryVO);
@@ -169,17 +214,17 @@ public class PageController {
     int cnt = this.cateProcInter.delete(id);
 
     if (cnt == 1) {
-//      model.addAttribute("code", Tool.DELETE_SUCCESS);
+      ra.addAttribute("word", word);
       return "redirect:/cate/list_all";
     } else {
       model.addAttribute("code", Tool.DELETE_FAIL);
+
+      model.addAttribute("title", categoryVO.getTitle());
+      model.addAttribute("artist", categoryVO.getArtist());
+      model.addAttribute("cnt", cnt);
+
+      return "/cate/msg";
     }
-
-    model.addAttribute("title", categoryVO.getTitle());
-    model.addAttribute("artist", categoryVO.getArtist());
-    model.addAttribute("cnt", cnt);
-
-    return "/cate/msg";
   }
 
 

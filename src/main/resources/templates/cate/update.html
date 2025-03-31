@@ -18,6 +18,7 @@
     <div style="width: 50%; margin: 0px auto;">
         <form name="frm" method="post" action="/cate/update" th:object="${categoryVO}">
             <input type="hidden" name="id" th:value="${categoryVO.id}" /> <!-- /* 값 유지 목적 */ -->
+            <input type="hidden" name="word" th:value="${word}"> <!--/* 값 유지 */-->
 
             <div>
                 <label>노래 제목</label>

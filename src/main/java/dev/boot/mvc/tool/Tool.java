@@ -18,4 +18,13 @@ public class Tool {
 
   // 삭제 실패
   public static final String DELETE_FAIL = "delete_fail";
+
+
+  public Tool() {
+  }
+
+  public static String checkNull(String str) {
+    return str != null && !str.equals("null") ? str : "";
+  }
+
 }

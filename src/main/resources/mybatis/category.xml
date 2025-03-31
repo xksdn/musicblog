@@ -70,4 +70,25 @@
         ORDER BY seqno ASC
     </select>
 
+    <!-- 검색
+      SQL -> CateVO 객체 레코드 수 만큼 생성 -> ArrayList<cateVO> 객체가 생성되어 CateDAOInter로 리턴  -->
+    <select id="list_search" resultType="dev.boot.mvc.db.CategoryVO" parameterType="String">
+        SELECT id, title, artist, genre, mood, era, region, rdate, seqno, visible
+        FROM category
+        <if test="word != null and word != ''"> <!-- 검색 상태라면 WHERE 생성 -->
+            WHERE (UPPER(genre) LIKE '%' || UPPER(#{word}) || '%') OR (UPPER(title) LIKE '%' || UPPER(#{word}) || '%')
+        </if>
+        ORDER BY seqno ASC
+    </select>
+
+    <!-- 검색 갯수 -->
+    <select id="list_search_count" resultType="Integer" parameterType="String">
+        SELECT COUNT(*) as cnt
+        FROM category
+        <if test="word != null and word != ''"> <!-- 검색 상태라면 WHERE 생성 -->
+            WHERE (UPPER(genre) LIKE '%' || UPPER(#{word}) || '%') OR (UPPER(title) LIKE '%' || UPPER(#{word}) || '%')
+        </if>
+        ORDER BY seqno ASC
+    </select>
+
 </mapper>

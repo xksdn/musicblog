@@ -28,4 +28,9 @@ public interface CateDAOInter {
 
   public ArrayList<CategoryVO> list_all_name_y(String genre);
 
+
+  ArrayList<CategoryVO> list_search(String word);
+
+  int list_search_count(String word);
+
 }

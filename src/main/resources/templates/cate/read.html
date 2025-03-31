@@ -15,6 +15,10 @@
         <span class="menu_divide"> | </span>
         <a th:href="@{|/cate/create|}">등록</a>
     </aside>
+
+    <!--/* /cate/list_search_com.html의 list_search_fragment를 include */-->
+    <div th:replace="~{cate/list_search_com::list_search_fragment}"></div>
+
     <div class="menu_line"></div>
 
 <!--    <div class="container mt-3"> &lt;!&ndash;/* mt-3: margin top 16px */&ndash;&gt;-->

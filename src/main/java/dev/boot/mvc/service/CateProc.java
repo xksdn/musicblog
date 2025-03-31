@@ -109,4 +109,18 @@ public class CateProc implements CateProcInter{
 
     return menu;
   }
+
+  @Override
+  public ArrayList<CategoryVO> list_search(String word) {
+    ArrayList<CategoryVO> list = this.cateDAOInter.list_search(word);
+
+    return list;
+  }
+
+  @Override
+  public int list_search_count(String word) {
+    int cnt = this.cateDAOInter.list_search_count(word);
+
+    return cnt;
+  }
 }

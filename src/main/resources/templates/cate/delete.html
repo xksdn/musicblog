@@ -19,6 +19,7 @@
     <div style="width: 50%; margin: 0px auto;">
         <form name="frm" method="post" th:action="|/cate/delete/${categoryVO.id}|" th:object="${categoryVO}">
             <input type="hidden" name="id" th:value="${categoryVO.id}"> <!--/* 값 유지 */-->
+            <input type="hidden" name="word" th:value="${word}"> <!--/* 값 유지 */-->
 
             <div class="msg_warning">
                 노래를 삭제하면 복구 할 수 없습니다.<br>삭제하시려면 [삭제] 버튼을 클릭하세요.
