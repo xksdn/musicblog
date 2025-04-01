@@ -7,9 +7,9 @@
     <aside class="aside_right">
         <a href="javascript: location.reload();">새로 고침</a>
         <span class="menu_divide"> | </span>
-        <a th:href="@{|/cate/list_all|}">목록</a>
+        <a th:href="@{|/cate/list_search|}">목록</a>
         <span class="menu_divide"> | </span>
-        <a th:href="@{|/cate/update/${categoryVO.id}|}">수정</a>
+        <a th:href="@{|/cate/update/${categoryVO.id}?word=${word}&now_page=${now_page}|}">수정</a>
         <span class="menu_divide"> | </span>
         <a th:href="@{|/cate/create|}">등록</a>
     </aside>
@@ -20,6 +20,7 @@
         <form name="frm" method="post" th:action="|/cate/delete/${categoryVO.id}|" th:object="${categoryVO}">
             <input type="hidden" name="id" th:value="${categoryVO.id}"> <!--/* 값 유지 */-->
             <input type="hidden" name="word" th:value="${word}"> <!--/* 값 유지 */-->
+            <input type="hidden" name="now_page" th:value="${now_page}"> <!--/* 값 유지 */-->
 
             <div class="msg_warning">
                 노래를 삭제하면 복구 할 수 없습니다.<br>삭제하시려면 [삭제] 버튼을 클릭하세요.
@@ -31,7 +32,7 @@
 
             <div class="content_body_bottom">
                 <button type="submit" class="btn btn-secondary btn-sm">삭제</button>
-                <button type="button" onclick="location.href='/cate/list_all'" class="btn btn-secondary btn-sm">목록</button>
+                <button type="button" th:attr="onclick=|location.href='/cate/list_search?word=${word}&now_page=${now_page}'|" class="btn btn-secondary btn-sm">취소[목록]</button>
             </div>
 
         </form>

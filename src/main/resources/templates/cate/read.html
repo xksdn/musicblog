@@ -7,11 +7,11 @@
     <aside class="aside_right">
         <a href="javascript: location.reload();">새로 고침</a>
         <span class="menu_divide"> | </span>
-        <a th:href="@{|/cate/list_all|}">목록</a>
+        <a th:href="@{|/cate/list_search|}">목록</a>
         <span class="menu_divide"> | </span>
-        <a th:href="@{|/cate/update/${categoryVO.id}|}">수정</a>
+        <a th:href="@{|/cate/update/${categoryVO.id}?word=${word}&now_page=${now_page}|}">수정</a>
         <span class="menu_divide"> | </span>
-        <a th:href="@{|/cate/delete/${categoryVO.id}|}">삭제</a>
+        <a th:href="@{|/cate/delete/${categoryVO.id}?word=${word}&now_page=${now_page}|}">삭제</a>
         <span class="menu_divide"> | </span>
         <a th:href="@{|/cate/create|}">등록</a>
     </aside>

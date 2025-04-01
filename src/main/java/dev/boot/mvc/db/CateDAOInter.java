@@ -2,6 +2,7 @@ package dev.boot.mvc.db;
 
 
 import java.util.ArrayList;
+import java.util.Map;
 
 public interface CateDAOInter {
   public int create(CategoryVO categoryVO);
@@ -32,5 +33,11 @@ public interface CateDAOInter {
   ArrayList<CategoryVO> list_search(String word);
 
   int list_search_count(String word);
+
+  /**
+   * 검색, 전체 목록
+   * @return
+   */
+  public ArrayList<CategoryVO> list_search_paging(Map map);
 
 }

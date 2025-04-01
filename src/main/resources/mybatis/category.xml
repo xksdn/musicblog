@@ -76,7 +76,7 @@
         SELECT id, title, artist, genre, mood, era, region, rdate, seqno, visible
         FROM category
         <if test="word != null and word != ''"> <!-- 검색 상태라면 WHERE 생성 -->
-            WHERE (UPPER(genre) LIKE '%' || UPPER(#{word}) || '%') OR (UPPER(title) LIKE '%' || UPPER(#{word}) || '%')
+            WHERE (UPPER(artist) LIKE '%' || UPPER(#{word}) || '%') OR (UPPER(title) LIKE '%' || UPPER(#{word}) || '%')
         </if>
         ORDER BY seqno ASC
     </select>
@@ -86,9 +86,27 @@
         SELECT COUNT(*) as cnt
         FROM category
         <if test="word != null and word != ''"> <!-- 검색 상태라면 WHERE 생성 -->
-            WHERE (UPPER(genre) LIKE '%' || UPPER(#{word}) || '%') OR (UPPER(title) LIKE '%' || UPPER(#{word}) || '%')
+            WHERE (UPPER(artist) LIKE '%' || UPPER(#{word}) || '%') OR (UPPER(title) LIKE '%' || UPPER(#{word}) || '%')
         </if>
         ORDER BY seqno ASC
     </select>
+
+
+    <select id="list_search_paging" resultType="dev.boot.mvc.db.CategoryVO" parameterType="Map">
+        SELECT id, title, artist, genre, mood, era, region, rdate, seqno, visible, r
+        FROM (
+            SELECT id, title, artist, genre, mood, era, region, rdate, seqno, visible, rownum as r
+            FROM (
+                SELECT id, title, artist, genre, mood, era, region, rdate, seqno, visible
+                FROM category
+                <if test="word != null and word != ''"> <!-- 검색 상태라면 WHERE 생성 -->
+                    WHERE (UPPER(artist) LIKE '%' || UPPER(#{word}) || '%') OR (UPPER(title) LIKE '%' || UPPER(#{word}) || '%') OR (UPPER(genre) LIKE '%' || UPPER(#{word}) || '%')
+                </if>
+                ORDER BY seqno ASC
+            )
+        )
+        WHERE r &gt;= #{start_num} AND r &lt;= #{end_num} <!-- WHERE r >= 7 AND r <= 9 -->
+    </select>
+
 
 </mapper>

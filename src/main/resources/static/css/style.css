@@ -543,3 +543,35 @@ a:active{  /* A 태그를 클릭한 상태 */
 /* ---------------------------------------------------------------------- */
 /* Bootstrap div input 태그 수평 center 정렬 종료                          */
 /* ---------------------------------------------------------------------- */
+
+
+
+/* ---------------------------------------------------------------------- */
+/* 페이징 박스 구현                                                     */
+/* ---------------------------------------------------------------------- */
+
+#paging {text-align: center; margin-top: 5px; font-size: 1em;}
+#paging a:link {text-decoration:none; color:black; font-size: 1em;}
+#paging a:hover{text-decoration:none; background-color: #FFFFFF; color:black; font-size: 1em;}
+#paging a:visited {text-decoration:none;color:black; font-size: 1em;}
+.span_box_1{ /* 현재 페이지가 아닌경우 */
+    text-align: center;
+    font-size: 1em;
+    border: 1px;
+    border-style: solid;
+    border-color: #cccccc;
+    padding:1px 6px 1px 6px; /*위, 오른쪽, 아래, 왼쪽*/
+    margin:1px 2px 1px 2px; /*위, 오른쪽, 아래, 왼쪽*/
+}
+.span_box_2{/* 현재 페이지인 경우 */
+    text-align: center;
+    background-color: #668db4;
+    color: #FFFFFF;
+    font-size: 1em;
+    border: 1px;
+    border-style: solid;
+    border-color: #cccccc;
+    padding:1px 6px 1px 6px; /*위, 오른쪽, 아래, 왼쪽*/
+    margin:1px 2px 1px 2px; /*위, 오른쪽, 아래, 왼쪽*/
+}
+

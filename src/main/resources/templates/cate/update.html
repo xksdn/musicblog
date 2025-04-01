@@ -7,12 +7,16 @@
     <aside class="aside_right">
         <a href="javascript: location.reload();">새로 고침</a>
         <span class="menu_divide"> | </span>
-        <a th:href="@{|/cate/list_all|}">목록</a>
+        <a th:href="@{|/cate/list_search|}">목록</a>
         <span class="menu_divide"> | </span>
-        <a th:href="@{|/cate/delete/${categoryVO.id}|}">삭제</a>
+        <a th:href="@{|/cate/delete/${categoryVO.id}?word=${word}&now_page=${now_page}|}">삭제</a>
         <span class="menu_divide"> | </span>
         <a th:href="@{|/cate/create|}">등록</a>
     </aside>
+
+    <!--/* /cate/list_search_com.html의 list_search_fragment를 include */-->
+    <div th:replace="~{cate/list_search_com::list_search_fragment}"></div>
+
     <div class="menu_line"></div>
 
     <div style="width: 50%; margin: 0px auto;">
@@ -91,11 +95,11 @@
             </div>
             <div class="content_body_bottom">
                 <button type="submit" class="btn btn-secondary btn-sm">저장</button>
-                <button type="button" onclick="location.href='/cate/list_all'" class="btn btn-secondary btn-sm">취소[목록]</button>
+                <button type="button" th:attr="onclick=|location.href='/cate/list_search?word=${word}&now_page=${now_page}'|" class="btn btn-secondary btn-sm">취소[목록]</button>
             </div>
 
         </form>
     </div>
     <div th:replace="~{cate/list_all_com::list_all_fragment}"></div>
-
+</div>
 </html>
