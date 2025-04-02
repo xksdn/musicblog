@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dev.boot.mvc.db.UserDAOInter"> <!-- SB가 자동으로 구현하여 연동하는 interface -->
+
+    <select id="checkID" resultType="int" parameterType="String">
+        SELECT COUNT(email) as cnt
+        FROM user_info
+        WHERE email=#{email}
+    </select>
+
+    <!--  회원가입  -->
+    <insert id="create" parameterType="dev.boot.mvc.db.UserVO">
+        INSERT INTO user_info (user_no, email, password, u_name, phone, zipcode, address, address_detail, mdate, user_level)
+        VALUES (user_seq.nextval, #{email}, #{password}, #{u_name}, #{phone}, #{zipcode}, #{address},
+                #{address_detail}, sysdate, #{user_level})
+    </insert>
+
+<!--  목록  -->
+    <select id="list" resultType="dev.boot.mvc.db.UserVO">
+        SELECT user_no, email, password, u_name, phone, zipcode, address, address_detail, mdate, user_level
+        FROM user_info
+        ORDER BY user_level ASC, email ASC
+    </select>
+
+<!--  user_no로 회원 정보 조회  -->
+    <select id="read" resultType="dev.boot.mvc.db.UserVO" parameterType="int">
+        SELECT user_no, email, password, u_name, phone, zipcode, address, address_detail, mdate, user_level
+        FROM user_info
+        WHERE user_no = #{user_no}
+    </select>
+
+<!--  email로 회원 정보 조회  -->
+    <select id="readById" resultType="dev.boot.mvc.db.UserVO" parameterType="String">
+        SELECT user_no, email, password, u_name, phone, zipcode, address, address_detail, mdate, user_level
+        FROM user_info
+        WHERE email = #{email}
+    </select>
+
+
+<!--  회원 정보 수정  -->
+    <update id="update" parameterType="dev.boot.mvc.db.UserVO">
+        UPDATE user_info
+        SET u_name=#{u_name}, phone=#{phone}, zipcode=#{zipcode},
+            address=#{address}, address_detail=#{address_detail}, user_level=#{user_level}
+        WHERE user_no=#{user_no}
+    </update>
+
+
+<!--  회원 삭제  -->
+    <delete id="delete" parameterType="int">
+        DELETE FROM user_info
+        WHERE user_no=#{user_no}
+    </delete>
+
+
+<!--  로그인   -->
+    <select id="login" resultType="int" parameterType="HashMap">
+        SELECT COUNT(user_no) as cnt
+        FROM user_info
+        WHERE email=#{email} AND password=#{password}
+    </select>
+
+
+<!--  현재 패스워드 검사  -->
+    <select id="passwd_check" resultType="int" parameterType="HashMap">
+        SELECT COUNT(user_no) as cnt
+        FROM user_info
+        WHERE user_no=#{user_no} AND password=#{password}
+    </select>
+
+
+<!-- 패스워드 변경   -->
+    <update id="passwd_update" parameterType="HashMap">
+        UPDATE user_info
+        SET password=#{password}
+        WHERE user_no=#{user_no}
+    </update>
+
+
+</mapper>
