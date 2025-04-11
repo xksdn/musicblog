@@ -4,6 +4,10 @@ import dev.boot.mvc.db.MenuVO;
 import dev.boot.mvc.db.UserVO;
 import dev.boot.mvc.service.CateProcInter;
 import dev.boot.mvc.service.UserProcinter;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.apache.catalina.User;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 // http://localhost:9092/user
 // http://192.168.12.151:9092/user
@@ -167,5 +172,275 @@ public class UserController {
       return "user/msg";
     }
   }
+
+
+  //  /**
+//   * 로그인
+//   * @param model
+//   * @param // user_no 회원 번호
+//   * @return 회원 정보
+//   */
+//  @GetMapping(value="/login")
+//  public String login_form(Model model) {
+//    return "/user/login";   // templates/user/login.html
+//  }
+//
+//  /**
+//   * 로그인 처리
+//   * @param model
+//   * @param // user_no 회원 번호
+//   * @return 회원 정보
+//   */
+//  @PostMapping(value="/login")
+//  public String login_proc(HttpSession session, Model model,
+//                           @RequestParam(name="email", defaultValue = "") String email,
+//                           @RequestParam(name="password", defaultValue = "") String password) {
+//    HashMap<String, Object> map = new HashMap<String, Object>();
+//    map.put("email", email);
+//    map.put("password", password);
+//
+//    int cnt = this.userProc.login(map);
+//    System.out.println("-> login_proc cnt: " + cnt);
+//
+//    model.addAttribute("cnt", cnt);
+//
+//    if (cnt == 1) {
+//      UserVO userVO = this.userProc.readById(id);
+//      session.setAttribute("userVO", userVO.getUser_no());
+//      session.setAttribute("email", userVO.getEmail());
+//      session.setAttribute("u_name", userVO.getU_name());
+//      session.setAttribute("user_level", userVO.getUser_level());
+//
+//      return "redirect:/";
+//    } else {
+//      model.addAttribute("code", "login_fail");
+//      return "/user/msg";
+//    }
+//
+//  }
+
+  // ----------------------------------------------------------------------------------
+  // Cookie 사용 로그인 관련 코드 시작
+  // ----------------------------------------------------------------------------------
+
+  /**
+   * 로그인
+   * */
+  @GetMapping("/login")
+  public String login_form (Model model, HttpServletRequest request)   {
+    // Cookie 관련 코드
+    Cookie[] cookies = request.getCookies();
+    Cookie cookie = null;
+
+    String ck_email = "";
+    String ck_email_save = "";
+    String ck_passwd = "";
+    String ck_passwd_save = "";
+
+    if (cookies != null) {
+      for (int i = 0; i < cookies.length; i++) {
+        cookie = cookies[i];
+
+        if (cookie.getName().equals("ck_email")) {
+          ck_email = cookie.getValue(); // email
+        } else if (cookie.getName().equals("ck_email_save")) {
+          ck_email_save = cookie.getValue(); // Y, N
+        } else if (cookie.getName().equals("ck_passwd")) {
+          ck_passwd = cookie.getValue(); // password
+        } else if (cookie.getName().equals("ck_passwd_save")) {
+          ck_passwd_save = cookie.getValue(); // Y, N
+        }
+      }
+    }
+
+    model.addAttribute("ck_email", ck_email);
+    model.addAttribute("ck_email_save", ck_email_save);
+    model.addAttribute("ck_passwd", ck_passwd);
+    model.addAttribute("ck_passwd_save", ck_passwd_save);
+
+
+
+    return "user/login_cookie";
+  }
+
+
+  /**
+   * Cookie 기반 로그인 처리
+   * */
+  @PostMapping("/login")
+  public String login_proc (
+          HttpSession session,
+          HttpServletRequest request,
+          HttpServletResponse response,
+          Model model,
+          @RequestParam(value = "email", defaultValue = "") String email,
+          @RequestParam(value="password", defaultValue = "") String password,
+          @RequestParam(value="email_save", defaultValue = "") String email_save,
+          @RequestParam(value="passwd_save", defaultValue = "") String passwd_save
+  ) {
+    HashMap<String, Object> map = new HashMap<>();
+    map.put("email", email);
+    map.put("password", password);
+
+    System.out.println("email: " + map.get("email"));
+    System.out.println("password: " + map.get("password"));
+
+    int cnt = this.userProc.login(map);
+
+    model.addAttribute("cnt", cnt);
+
+    if (cnt == 1) {
+      UserVO userVO = this.userProc.readById(email);
+
+      session.setAttribute("user_no", userVO.getUser_no());
+      session.setAttribute("email", userVO.getEmail());
+      session.setAttribute("u_name", userVO.getU_name());
+      session.setAttribute("user_level", userVO.getUser_level());
+
+      // Cookie 관련 코드---------------------------------------------------------
+      // -------------------------------------------------------------------
+      // id 관련 쿠기 저장
+      // -------------------------------------------------------------------
+      if (email_save.equals("Y")) { // 아이디(이메일)를 저장 할 경우
+        Cookie ck_email = new Cookie("ck_email", email);
+        ck_email.setPath("/"); // root 폴더에 쿠키를 기록함으로 모든 경로에서 쿠기 접근 가능
+        ck_email.setMaxAge(60 * 60 * 24 * 30);
+        response.addCookie(ck_email); // 아이디(이메일) 저장
+      } else { // 아이디(이메일)를 저장하지 않을 경우
+        Cookie ck_email = new Cookie("ck_email", email);
+        ck_email.setPath("/");
+        ck_email.setMaxAge(0);
+        response.addCookie(ck_email);
+      }
+
+      // 아이디(이메일)를 저장할지 선택하는 CheckBox 체크 여부
+      Cookie ck_email_save = new Cookie("ck_email_save", email_save);
+      ck_email_save.setPath("/");
+      ck_email_save.setMaxAge(60 * 60 * 24 * 30);
+      response.addCookie(ck_email_save);
+
+
+
+      // -------------------------------------------------------------------
+      // Password 관련 쿠기 저장
+      // -------------------------------------------------------------------
+      if (passwd_save.equals("Y")) { // passwd를 저장 할 경우
+        Cookie ck_passwd = new Cookie("ck_passwd", password);
+        ck_passwd.setPath("/"); // root 폴더에 쿠키를 기록함으로 모든 경로에서 쿠기 접근 가능
+        ck_passwd.setMaxAge(60 * 60 * 24 * 30);
+        response.addCookie(ck_passwd); // passwd를 저장
+      } else { // passwd를 저장하지 않을 경우
+        Cookie ck_passwd = new Cookie("ck_passwd", password);
+        ck_passwd.setPath("/");
+        ck_passwd.setMaxAge(0);
+        response.addCookie(ck_passwd);
+      }
+
+      // passwd를 저장할지 선택하는 CheckBox 체크 여부
+      Cookie ck_passwd_save = new Cookie("ck_passwd_save", passwd_save);
+      ck_passwd_save.setPath("/");
+      ck_passwd_save.setMaxAge(60 * 60 * 24 * 30);
+      response.addCookie(ck_passwd_save);
+
+      return "redirect:/";
+    } else {
+      model.addAttribute("code", "login_fail");
+      return "user/msg";
+    }
+  }
+
+
+  /**
+   * 로그아웃
+   * */
+  @GetMapping("/logout")
+  public String logout (HttpSession session, Model model) {
+    session.invalidate(); // 모든 변수 삭제
+    return "redirect:/";
+  }
+
+  /**
+   * password 수정 폼
+   * */
+  @GetMapping("/passwd_update")
+  public String passwd_update_form (HttpSession session, Model model) {
+    int user_no = (int) session.getAttribute("user_no");
+
+    UserVO userVO = this.userProc.read(user_no);
+
+    model.addAttribute("userVO", userVO);
+
+    return "user/passwd_update";
+  }
+
+
+  /**
+   * 현재 패스워드 확인
+   * */
+  @PostMapping("passwd_check")
+  @ResponseBody
+  public String passwd_check (HttpSession session, @RequestBody String json_src) {
+    JSONObject src = new JSONObject(json_src);
+    String current_passwd = (String) src.get("current_passwd");
+
+    try {Thread.sleep(3000);} catch (Exception e) {}
+
+
+    int user_no = (int) session.getAttribute("user_no"); // session에서 가져오기
+    HashMap<String, Object> map = new HashMap<>();
+    map.put("user_no", user_no);
+    map.put("password", current_passwd);
+
+    int cnt = this.userProc.passwd_check(map);
+
+    JSONObject json = new JSONObject();
+    json.put("cnt", cnt);
+
+    return json.toString();
+  }
+
+
+  /**
+   * 패스워드 변경
+   */
+  @PostMapping("/passwd_update_proc")
+  public String passwd_update_proc (
+          HttpSession session,
+          Model model,
+          @RequestParam(value = "current_passwd", defaultValue = "") String current_passwd,
+          @RequestParam(value = "password", defaultValue = "") String password
+  ) {
+    int user_no = (int) session.getAttribute("user_no");
+    HashMap<String, Object> map = new HashMap<>();
+    map.put("user_no", user_no);
+    map.put("password", current_passwd);
+
+    System.out.println("user_no: " + user_no);
+    System.out.println("password: " + password);
+
+    int cnt = this.userProc.passwd_check(map);
+
+    if (cnt == 0) { // 패스워드 불일치
+      model.addAttribute("code", "passwd_not_equal");
+      model.addAttribute("cnt", 0);
+    } else {
+      map = new HashMap<>();
+      map.put("user_no", user_no);
+      map.put("password", password);
+
+      int passwd_change_cnt = this.userProc.passwd_update(map);
+
+      if (passwd_change_cnt == 1) {
+        model.addAttribute("code", "passwd_change_success");
+        model.addAttribute("cnt", 1);
+      } else {
+        model.addAttribute("code", "passwd_change_fail");
+        model.addAttribute("cnt", 0);
+      }
+    }
+
+    return "user/msg";
+  }
+
 
 }

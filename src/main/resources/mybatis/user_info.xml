@@ -71,7 +71,7 @@
 
 
 <!-- 패스워드 변경   -->
-    <update id="passwd_update" parameterType="HashMap">
+    <update id="passwd_update" parameterType="java.util.Map">
         UPDATE user_info
         SET password=#{password}
         WHERE user_no=#{user_no}
