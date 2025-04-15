@@ -4,7 +4,9 @@ import dev.boot.mvc.db.CateDAOInter;
 import dev.boot.mvc.db.CategoryVO;
 import dev.boot.mvc.db.MenuVO;
 import dev.boot.mvc.service.CateProcInter;
+import dev.boot.mvc.service.UserProcinter;
 import dev.boot.mvc.tool.Tool;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,9 @@ public class PageController {
 
   @Autowired
   private CateProcInter cateProcInter;
+
+  @Autowired
+  private UserProcinter userProcinter;
 
   /** 페이지당 출력할 레코드 갯수, nowPage는 1부터 시작 */
   public int record_per_page = 4;
@@ -89,38 +94,42 @@ public class PageController {
   @GetMapping("/list_search")
   public String list_search(
           Model model,
+          HttpSession session,
           @ModelAttribute("categoryVO") CategoryVO categoryVO,
           @RequestParam(name = "word", defaultValue = "") String word,
           @RequestParam(name = "now_page", defaultValue = "1") int now_page
   ) {
-    ArrayList<CategoryVO> list = this.cateProcInter.list_search_paging(word, now_page, this.record_per_page);
-    model.addAttribute("list", list);
+    if (this.userProcinter.isAdmin(session)) {
+      ArrayList<CategoryVO> list = this.cateProcInter.list_search_paging(word, now_page, this.record_per_page);
+      model.addAttribute("list", list);
 
-    word = Tool.checkNull(word);
+      word = Tool.checkNull(word);
 
-    ArrayList<MenuVO> menu = this.cateProcInter.menu();
-    model.addAttribute("menu", menu);
+      ArrayList<MenuVO> menu = this.cateProcInter.menu();
+      model.addAttribute("menu", menu);
 
-    int list_search_count = this.cateProcInter.list_search_count(word);
-    model.addAttribute("list_search_count", list_search_count);
+      int list_search_count = this.cateProcInter.list_search_count(word);
+      model.addAttribute("list_search_count", list_search_count);
 
-    model.addAttribute("word", word);
+      model.addAttribute("word", word);
 
-    // --------------------------------------------------------------------------------------
-    // 페이지 번호 목록 생성
-    // --------------------------------------------------------------------------------------
-    int search_count = this.cateProcInter.list_search_count(word);
-    String paging = this.cateProcInter.pagingBox(now_page, word, this.list_file_name, search_count, this.record_per_page, this.page_per_block);
-    model.addAttribute("paging", paging);
-    model.addAttribute("now_page", now_page);
+      // --------------------------------------------------------------------------------------
+      // 페이지 번호 목록 생성
+      // --------------------------------------------------------------------------------------
+      int search_count = this.cateProcInter.list_search_count(word);
+      String paging = this.cateProcInter.pagingBox(now_page, word, this.list_file_name, search_count, this.record_per_page, this.page_per_block);
+      model.addAttribute("paging", paging);
+      model.addAttribute("now_page", now_page);
 
-    // 일련 변호 생성: 레코드 갯수 - ((현재 페이지수 -1) * 페이지당 레코드 수)
-    int no = search_count - ((now_page - 1) * this.record_per_page);
-    model.addAttribute("no", no);
-    // --------------------------------------------------------------------------------------
+      // 일련 변호 생성: 레코드 갯수 - ((현재 페이지수 -1) * 페이지당 레코드 수)
+      int no = search_count - ((now_page - 1) * this.record_per_page);
+      model.addAttribute("no", no);
+      // --------------------------------------------------------------------------------------
 
-    return "cate/list_search";
-
+      return "cate/list_search";
+    } else {
+      return "redirect:/user/login_cookie_need?url=/cate/list_search";
+    }
   }
 
 

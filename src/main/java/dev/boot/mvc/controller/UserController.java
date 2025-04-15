@@ -97,28 +97,65 @@ public class UserController {
 
   // http://192.168.12.151:9092/user/list
   @GetMapping("/list")
-  public String list(Model model) {
-    ArrayList<UserVO> list = this.userProc.list();
-
-    model.addAttribute("list", list);
-
-    return "user/list";
-  }
-
-
-  // 조회
-  @GetMapping("/read")
-  public String read (
-          Model model,
-          @RequestParam(name = "user_no", defaultValue = "") int user_no
-  ) {
-    UserVO userVO = this.userProc.read(user_no);
-    model.addAttribute("userVO", userVO);
-
+  public String list(Model model, HttpSession session) {
     ArrayList<MenuVO> menu = this.cateProc.menu();
     model.addAttribute("menu", menu);
 
-    return "user/read";
+    if (this.userProc.isAdmin(session)) {
+      ArrayList<UserVO> list = this.userProc.list();
+
+      model.addAttribute("list", list);
+
+      return "user/list";
+    } else {
+      return "redirect:/user/login_cookie_need?url=/user/list";
+    }
+  }
+
+
+//  // 조회
+//  @GetMapping("/read")
+//  public String read (
+//          Model model,
+//          @RequestParam(name = "user_no", defaultValue = "") int user_no
+//  ) {
+//    UserVO userVO = this.userProc.read(user_no);
+//    model.addAttribute("userVO", userVO);
+//
+//    ArrayList<MenuVO> menu = this.cateProc.menu();
+//    model.addAttribute("menu", menu);
+//
+//    return "user/read";
+//  }
+
+  /**
+   * 조회
+   * @param model
+   * @param user_no 회원 번호
+   * @return 회원 정보
+   */
+  @GetMapping("/read")
+  public String read (
+          HttpSession session,
+          Model model,
+          @RequestParam(name = "user_no", defaultValue = "") int user_no
+  ) {
+    String user_level = (String)session.getAttribute("user_level");
+
+    if (user_level.equals("user") && user_no == (int)session.getAttribute("user_no")) {
+      UserVO userVO = this.userProc.read(user_no);
+      model.addAttribute("userVO", userVO);
+
+      return "user/read";
+    } else if (user_level.equals("admin")) {
+      UserVO userVO = this.userProc.read(user_no);
+      model.addAttribute("userVO", userVO);
+
+      return "user/read";
+    } else {
+      return "redirect:/user/login_cookie_need";
+    }
+
   }
 
 
@@ -228,6 +265,9 @@ public class UserController {
    * */
   @GetMapping("/login")
   public String login_form (Model model, HttpServletRequest request)   {
+    ArrayList<MenuVO> menu = this.cateProc.menu();
+    model.addAttribute("menu", menu);
+
     // Cookie 관련 코드
     Cookie[] cookies = request.getCookies();
     Cookie cookie = null;
@@ -276,14 +316,15 @@ public class UserController {
           @RequestParam(value = "email", defaultValue = "") String email,
           @RequestParam(value="password", defaultValue = "") String password,
           @RequestParam(value="email_save", defaultValue = "") String email_save,
-          @RequestParam(value="passwd_save", defaultValue = "") String passwd_save
+          @RequestParam(value="passwd_save", defaultValue = "") String passwd_save,
+          @RequestParam(value = "url", defaultValue = "") String url
   ) {
     HashMap<String, Object> map = new HashMap<>();
     map.put("email", email);
     map.put("password", password);
 
-    System.out.println("email: " + map.get("email"));
-    System.out.println("password: " + map.get("password"));
+//    System.out.println("email: " + map.get("email"));
+//    System.out.println("password: " + map.get("password"));
 
     int cnt = this.userProc.login(map);
 
@@ -296,6 +337,19 @@ public class UserController {
       session.setAttribute("email", userVO.getEmail());
       session.setAttribute("u_name", userVO.getU_name());
       session.setAttribute("user_level", userVO.getUser_level());
+
+
+      // 회원 등급 처리
+      if (userVO.getUser_level() >= 1 && userVO.getUser_level() <= 10) {
+        session.setAttribute("user_level", "admin");
+      } else if (userVO.getUser_level() >= 11 && userVO.getUser_level() <= 20) {
+        session.setAttribute("user_level", "user");
+      } else if (userVO.getUser_level() >= 21) {
+        session.setAttribute("user_level", "guest");
+      }
+
+      System.out.println("-> user_level: " + session.getAttribute("user_level"));
+
 
       // Cookie 관련 코드---------------------------------------------------------
       // -------------------------------------------------------------------
@@ -342,7 +396,12 @@ public class UserController {
       ck_passwd_save.setMaxAge(60 * 60 * 24 * 30);
       response.addCookie(ck_passwd_save);
 
-      return "redirect:/";
+      if (url.length() > 0) {
+        return "redirect:" + url;
+      } else {
+        return "redirect:/";
+      }
+
     } else {
       model.addAttribute("code", "login_fail");
       return "user/msg";
@@ -364,13 +423,20 @@ public class UserController {
    * */
   @GetMapping("/passwd_update")
   public String passwd_update_form (HttpSession session, Model model) {
-    int user_no = (int) session.getAttribute("user_no");
+    if (this.userProc.isMember(session)) {
+      ArrayList<MenuVO> menu = this.cateProc.menu();
+      model.addAttribute("menu", menu);
 
-    UserVO userVO = this.userProc.read(user_no);
+      int user_no = (int) session.getAttribute("user_no");
 
-    model.addAttribute("userVO", userVO);
+      UserVO userVO = this.userProc.read(user_no);
 
-    return "user/passwd_update";
+      model.addAttribute("userVO", userVO);
+
+      return "user/passwd_update";
+    } else {
+      return "redirect:/user/login_cookie_need";
+    }
   }
 
 
@@ -410,37 +476,92 @@ public class UserController {
           @RequestParam(value = "current_passwd", defaultValue = "") String current_passwd,
           @RequestParam(value = "password", defaultValue = "") String password
   ) {
-    int user_no = (int) session.getAttribute("user_no");
-    HashMap<String, Object> map = new HashMap<>();
-    map.put("user_no", user_no);
-    map.put("password", current_passwd);
-
-    System.out.println("user_no: " + user_no);
-    System.out.println("password: " + password);
-
-    int cnt = this.userProc.passwd_check(map);
-
-    if (cnt == 0) { // 패스워드 불일치
-      model.addAttribute("code", "passwd_not_equal");
-      model.addAttribute("cnt", 0);
-    } else {
-      map = new HashMap<>();
+    if (this.userProc.isMember(session)) {
+      int user_no = (int) session.getAttribute("user_no");
+      HashMap<String, Object> map = new HashMap<>();
       map.put("user_no", user_no);
-      map.put("password", password);
+      map.put("password", current_passwd);
 
-      int passwd_change_cnt = this.userProc.passwd_update(map);
+      System.out.println("user_no: " + user_no);
+      System.out.println("password: " + password);
 
-      if (passwd_change_cnt == 1) {
-        model.addAttribute("code", "passwd_change_success");
-        model.addAttribute("cnt", 1);
-      } else {
-        model.addAttribute("code", "passwd_change_fail");
+      int cnt = this.userProc.passwd_check(map);
+
+      if (cnt == 0) { // 패스워드 불일치
+        model.addAttribute("code", "passwd_not_equal");
         model.addAttribute("cnt", 0);
+      } else {
+        map = new HashMap<>();
+        map.put("user_no", user_no);
+        map.put("password", password);
+
+        int passwd_change_cnt = this.userProc.passwd_update(map);
+
+        if (passwd_change_cnt == 1) {
+          model.addAttribute("code", "passwd_change_success");
+          model.addAttribute("cnt", 1);
+        } else {
+          model.addAttribute("code", "passwd_change_fail");
+          model.addAttribute("cnt", 0);
+        }
+      }
+
+      return "user/msg";
+    } else {
+      return "redirect:/user/login_cookie_need";
+    }
+
+  }
+
+
+  /**
+   * 로그인 요구에 따른 로그인 폼 출력
+   * @param model
+   * @param // memberno 회원 번호
+   * @return 회원 정보
+   */
+  @GetMapping("/login_cookie_need")
+  public String login_cookie_need (
+          Model model,
+          HttpServletRequest request,
+          @RequestParam(name = "url", defaultValue = "") String url
+  ) {
+    ArrayList<MenuVO> menu = this.cateProc.menu();
+    model.addAttribute("menu", menu);
+
+    // Cookie 관련 코드---------------------------------------------------------
+    Cookie[] cookies = request.getCookies();
+    Cookie cookie = null;
+
+    String ck_email = "";
+    String ck_email_save = "";
+    String ck_passwd = "";
+    String ck_passwd_save = "";
+
+    if (cookies != null) {
+      for (int i = 0; i < cookies.length; i++) {
+        cookie = cookies[i];
+
+        if (cookie.getName().equals("ck_email")) {
+          ck_email = cookie.getValue(); // email
+        } else if (cookie.getName().equals("ck_email_save")) {
+          ck_email_save = cookie.getValue(); // Y, N
+        } else if (cookie.getName().equals("ck_passwd")) {
+          ck_passwd = cookie.getValue(); // password
+        } else if (cookie.getName().equals("ck_passwd_save")) {
+          ck_passwd_save = cookie.getValue(); // Y, N
+        }
       }
     }
 
-    return "user/msg";
-  }
+    model.addAttribute("ck_email", ck_email);
+    model.addAttribute("ck_email_save", ck_email_save);
+    model.addAttribute("ck_passwd", ck_passwd);
+    model.addAttribute("ck_passwd_save", ck_passwd_save);;
 
+    model.addAttribute("url", url);
+
+    return "user/login_cookie_need"; // templates/user/login_cookie_need.html
+  }
 
 }

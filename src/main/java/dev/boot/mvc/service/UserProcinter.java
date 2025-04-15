@@ -53,7 +53,7 @@ public interface UserProcinter {
    * @param session
    * @return true: 사용자
    */
-  public boolean isMemberAdmin(HttpSession session);
+  public boolean isAdmin(HttpSession session);
 
   /**
    * 수정 처리

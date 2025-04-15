@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+
+<html layout:decorate="~{layout}" xmlns:layout="http://www.w3.org/1999/xhtml"> <!-- layout.html 상속-->
+
+<div layout:fragment="content">
+  <script>
+    window.onload = () => {
+      document.querySelector('#email').addEventListener('keypress', (event) => {
+        // document.getElementById('passwd').addEventListener('keypress', (event) => {
+        if(event.key === 'Enter') { // ===: 타입까지 확인
+          document.getElementById('btn_checkID').focus();
+        }
+      });
+
+      document.querySelector('#password').addEventListener('keypress', (event) => {
+        // document.getElementById('passwd').addEventListener('keypress', (event) => {
+        if(event.key === 'Enter') {
+          document.getElementById('btn_send').focus();
+        }
+      });
+
+    }
+
+    function send() { // 회원 가입 처리
+      let email = document.getElementById('email');
+      let email_msg = document.getElementById('email_msg');
+
+      if (email.value.trim().length == 0) {
+        email_msg.innerHTML= 'ID 입력은 필수 입니다. ID(이메일)는 3자이상 권장합니다.';
+        email_msg.classList.add('span_warning');    // class 적용
+        password.focus();
+
+        return false;  // 로그인 진행 중지
+
+      }
+
+      let password = document.getElementById('password');
+      let passwd_msg = document.getElementById('passwd_msg');
+
+      if (password.value.trim().length == 0) {
+        passwd_msg.innerHTML= '패스워드 입력은 필수 입니다. 패스워드는 8자이상 권장합니다.';
+        passwd_msg.classList.add('span_warning');    // class 적용
+        password.focus();
+
+        return false;  // 로그인 진행 중지
+
+      }
+
+      document.getElementById('frm').submit(); // required="required" 작동 안됨.
+    }
+  </script>
+
+  <div class="title_line" style='color: #FF0000;'>정상적인 접근이 아닙니다. 로그인이 필요합니다.</div>
+  <aside class="aside_right">
+    <a href="javascript:location.reload();">새로고침</a>
+    <span class='menu_divide' >│</span>
+    <a href='./create'>회원 가입</a>
+    <span class='menu_divide' >│</span>
+    <a href='./list'>목록</a>
+  </aside>
+
+  <div class='menu_line'></div>
+
+  <div style="width: 30%; margin: 0px auto ">
+    <form name="frm" id="frm" th:object="${userVO}" method="post" action="/user/login">
+      <input type="hidden" name="url" th:value="${url}">
+      <div>
+        <label for="email">아이디(이메일)*</label>
+        <input type="text" name="email" id="email" th:value="${ck_email}" autofocus="autofocus"
+               class="form-control fom-control-sm" style="width: 100%;">
+        <label><input type="checkbox" name="email_save" id="email_save" value="Y" th:checked="${ck_email_save == 'Y'}"> 저장</label>
+          <span id='email_msg'></span>
+      </div>
+
+      <div class="form-group">
+        <label for="password">패스워드*</label>
+        <input type='password' name='password' id='password' th:value="${ck_passwd}" required="required"
+               placeholder="패스워드" class="form-control form-control-sm" style="width: 100%;">
+        <label><input type="checkbox" name="passwd_save" id="passwd_save" value="Y" th:checked="${ck_passwd_save == 'Y'}"> 저장</label>
+          <span id='passwd_msg'></span>
+      </div>
+
+      <div class="content_body_bottom">
+        <button type="button" id="btn_send" onclick="send();" class="btn btn-secondary btn-sm">로그인</button>
+        <button type="button" onclick="history.back();" class="btn btn-secondary btn-sm">취소</button>
+      </div>
+
+
+    </form>
+  </div>
+
+</div>
+</html>
