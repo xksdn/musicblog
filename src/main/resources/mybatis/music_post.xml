@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="dev.boot.mvc.db.PostDAOInter">
+    <insert id="create" parameterType="dev.boot.mvc.db.PostVO">
+        INSERT INTO music_post (post_no, user_no, cate_id, title, content,
+                                password, word, rdate,
+                                file1, file1saved, size1, visible,
+                                thumb1)
+        VALUES (music_post_seq.NEXTVAL, #{user_no}, #{cate_id}, #{title},
+                #{content}, #{password}, #{word},
+                SYSDATE, #{file1}, #{file1saved}, #{size1}, #{visible}, #{thumb1})
+    </insert>
+
+
+    <select id="list_all" resultType="dev.boot.mvc.db.PostVO">
+        SELECT post_no, user_no, cate_id, title, content, recom, cnt, replycnt, password, word, rdate,
+               file1, file1saved, thumb1, size1, mp3
+        FROM music_post
+        ORDER BY post_no DESC
+    </select>
+
+    <select id="list_by_cateno" resultType="dev.boot.mvc.db.PostVO" parameterType="int">
+        SELECT post_no, user_no, cate_id, title, content, recom, cnt, replycnt, rdate,
+               LOWER(file1) as file1, file1saved, thumb1, size1, mp3
+        FROM music_post
+        WHERE cate_id = #{cate_id}
+        ORDER BY post_no DESC
+    </select>
+
+
+    <select id="read" resultType="dev.boot.mvc.db.PostVO" parameterType="int">
+        SELECT post_no, user_no, cate_id, title, content, recom, cnt, replycnt, password, word, rdate,
+               file1, file1saved, thumb1, size1, map, youtube
+        FROM music_post
+        WHERE post_no = #{post_no}
+    </select>
+
+
+    <update id="map" parameterType="HashMap">
+        UPDATE music_post SET map=#{map} WHERE post_no=#{post_no}
+    </update>
+
+    <update id="youtube" parameterType="HashMap">
+        UPDATE music_post SET youtube=#{youtube} WHERE post_no=#{post_no}
+    </update>
+
+
+    <select id="list_by_cateno_search" resultType="dev.boot.mvc.db.PostVO" parameterType="HashMap">
+        SELECT post_no, user_no, cate_id, title, content, recom, cnt, replycnt, word, rdate,
+               file1, file1saved, thumb1, size1, map, youtube
+        FROM music_post
+        <choose>
+            <when test="word == null or word == ''">
+                WHERE cate_id=#{cate_id}
+            </when>
+            <otherwise>
+                WHERE cate_id=#{cate_id}
+                AND (UPPER(title) LIKE '%' || UPPER(#{word}) || '%'
+                OR UPPER(content) LIKE '%' || UPPER(#{word}) || '%'
+                OR UPPER(word) LIKE '%' || UPPER(#{word}) || '%')
+            </otherwise>
+        </choose>
+        ORDER BY post_no DESC
+    </select>
+
+
+    <select id="list_by_cateno_search_count" resultType="int" parameterType="HashMap">
+        SELECT COUNT(*) as cnt
+        FROM music_post
+        <choose>
+            <when test="word == null or word == ''">
+                WHERE cate_id=#{cate_id}
+            </when>
+            <otherwise>
+                WHERE cate_id=#{cate_id}
+                AND (UPPER(title) LIKE '%' || UPPER(#{word}) || '%'
+                OR UPPER(content) LIKE '%' || UPPER(#{word}) || '%'
+                OR UPPER(word) LIKE '%' || UPPER(#{word}) || '%')
+            </otherwise>
+        </choose>
+    </select>
+
+
+    <select id="list_by_cateno_search_paging" resultType="dev.boot.mvc.db.PostVO" parameterType="HashMap">
+        SELECT post_no, user_no, cate_id, title, content, recom, cnt, replycnt, rdate, file1, file1saved, thumb1, size1, map, youtube, r
+        FROM (
+        SELECT post_no, user_no, cate_id, title, content, recom, cnt, replycnt, rdate, file1, file1saved, thumb1, size1, map, youtube, rownum as r
+        FROM (
+        SELECT post_no, user_no, cate_id, title, content, recom, cnt, replycnt, rdate, file1, file1saved, thumb1, size1, map, youtube
+        FROM music_post
+        <choose>
+            <when test="word == null or word == ''">
+                WHERE cate_id=#{cate_id}
+            </when>
+            <otherwise>
+                WHERE cate_id=#{cate_id}
+                AND (UPPER(title) LIKE '%' || UPPER(#{word}) || '%'
+                OR UPPER(content) LIKE '%' || UPPER(#{word}) || '%'
+                OR UPPER(word) LIKE '%' || UPPER(#{word}) || '%')
+            </otherwise>
+        </choose>
+            ORDER BY post_no DESC
+             )
+             )
+        WHERE <![CDATA[ r >= #{start_num} AND r <= #{end_num} ]]>
+    </select>
+
+
+    <select id="password_check" resultType="int" parameterType="HashMap">
+        SELECT COUNT(*) as cnt
+        FROM music_post
+        WHERE post_no = #{post_no} AND password=#{password}
+    </select>
+
+
+    <update id="update_text" parameterType="dev.boot.mvc.db.PostVO">
+        UPDATE music_post
+        SET title=#{title}, content=#{content}, word=#{word}
+        WHERE post_no=#{post_no}
+    </update>
+
+
+    <update id="update_file" parameterType="dev.boot.mvc.db.PostVO">
+        UPDATE music_post
+        SET file1=#{file1}, file1saved=#{file1saved}, thumb1=#{thumb1}, size1=#{size1}
+        WHERE post_no=#{post_no}
+    </update>
+
+
+    <delete id="delete" parameterType="int">
+        DELETE FROM music_post
+        WHERE post_no = #{post_no}
+    </delete>
+
+
+    <select id="count_by_cateno" resultType="int" parameterType="int">
+        SELECT COUNT(*) as cnt
+        FROM music_post
+        WHERE post_no=#{post_no}
+    </select>
+
+
+    <select id="count_by_memberno" resultType="int" parameterType="int">
+        SELECT COUNT(*) as cnt
+        FROM music_post
+        WHERE user_no=#{user_no}
+    </select>
+
+    <delete id="delete_by_cateno" parameterType="int">
+        DELETE FROM music_post
+        WHERE cate_id=#{cate_id}
+    </delete>
+
+    <delete id="delete_by_memberno" parameterType="int">
+        DELETE FROM music_post
+        WHERE user_no=#{user_no}
+    </delete>
+
+
+    <update id="increaseReplycnt" parameterType="int">
+        UPDATE music_post
+        SET replycnt = replycnt + 1
+        WHERE post_no = #{post_no}
+    </update>
+
+    <update id="decreaseReplycnt" parameterType="int">
+        UPDATE music_post
+        SET replycnt = replycnt - 1
+        WHERE post_no = #{post_no}
+    </update>
+
+</mapper>

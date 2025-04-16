@@ -21,7 +21,9 @@
 
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                            <li th:each="CategoryVO:${MenuVO.list_name}"><a class="dropdown-item" href="#" th:text="${CategoryVO.era}"></a></li>
+                            <li th:each="CategoryVO:${MenuVO.list_name}">
+                                <a class="dropdown-item" th:href="@{|/posts/list_by_cateno?cate_id=${CategoryVO.id}|}" th:text="${CategoryVO.era}"></a>
+                            </li>
                         </ul>
 
                     </li>

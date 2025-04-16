@@ -7,8 +7,8 @@
       <col style='width: 15%;'/> <!-- 노래 장르 -->
       <col style='width: 15%;'/> <!-- 노래 분위기 -->
       <col style='width: 10%;'/> <!-- 발표 연도 -->
-      <col style='width: 10%;'/> <!-- 발표 지역 -->
-      <col style='width: 20%;'/> <!-- 등록 일자 -->
+      <col style='width: 8%;'/> <!-- 발표 지역 -->
+      <col style='width: 22%;'/> <!-- 등록 일자 -->
     </colgroup>
 
     <thead>
@@ -38,6 +38,9 @@
       <td class="th_bs" th:text="${CategoryVO.era}"></td>
       <td class="th_bs" th:text="${CategoryVO.region}"></td>
       <td class="th_bs">
+        <a th:href="@{|/posts/list_by_cateno?cate_id=${CategoryVO.id}|}"><img src="/cate/images/contents.png" class="icon" title="글 목록"></a>
+        <a th:href="@{|/posts/create?cate_id=${CategoryVO.id}|}"><img src="/cate/images/create.png" class="icon" title="글 등록"></a>
+
         <span th:text="${CategoryVO.seqno}"></span>
         <span th:if="${CategoryVO.visible == 'Y'}">
           <a th:href="@{|/cate/update_visible_y/${CategoryVO.id}?word=${word}&now_page=${now_page}|}">

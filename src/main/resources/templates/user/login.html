@@ -8,14 +8,14 @@
       document.querySelector('#email').addEventListener('keypress', (event) => {
         // document.getElementById('passwd').addEventListener('keypress', (event) => {
         if(event.key === 'Enter') { // ===: 타입까지 확인
-          document.getElementById('btn_checkID').focus();
+          document.getElementById('passwd').focus();
         }
       });
 
       document.querySelector('#passwd').addEventListener('keypress', (event) => {
         // document.getElementById('passwd').addEventListener('keypress', (event) => {
         if(event.key === 'Enter') {
-          document.getElementById('btn_send').focus();
+          send();
         }
       });
 
@@ -78,7 +78,7 @@
       </div>
 
       <div class="content_body_bottom">
-        <button type="button" onclick="send();" class="btn btn-secondary btn-sm">로그인</button>
+        <button type="submit" onclick="send();" class="btn btn-secondary btn-sm">로그인</button>
         <button type="button" onclick="history.back();" class="btn btn-secondary btn-sm">취소</button>
       </div>
 
