@@ -4,15 +4,22 @@
 <div layout:fragment="content">
 
   <div class='title_line'>
-    <span th:text="${categoryVO.genre}" class="title_line_text"></span >
-    > <span th:text="${categoryVO.artist}" class="title_line_text"></span >
+    <span th:text="${categoryVO.genre}" class="title_line_text"></span>
+    > <span th:text="${categoryVO.artist}" class="title_line_text"></span>
+    <span th:if="${word != null and word != ''}" th:text="|${word} ${search_count} 건|">
   </div>
 
   <aside class="aside_right">
-    <a th:href="@{|/posts/create?cate_id=${categoryVO.id}|}">등록</a>
-    <span class="menu_divide">|</span>
+    <span th:if="${session.user_level == 'admin'}">
+      <a th:href="@{|/posts/create?cate_id=${categoryVO.id}|}">등록</a>
+      <span class="menu_devide">│</span>
+    </span>
+
     <a href="javascript:location.reload();">새로고침</a>
   </aside>
+
+  <!-- /contents/list_search_com.html 파일의 list_search_fragment import -->
+  <div th:replace="~{posts/list_search_com::list_search_fragment}"></div>
 
   <div class='menu_line'></div>
 
@@ -27,14 +34,14 @@
     </tr>
 
     <tr th:each="postVO, status:${list}"
-        th:attr="onclick=|location.href='/posts/read?post_no=${postVO.post_no}'|"
+        th:attr="onclick=|location.href='/posts/read?post_no=${postVO.post_no}&word=${word}'|"
         style="cursor: pointer; height: 90px;">
       <td class='td_basic' style="vertical-align: middle; text-align: center;">
-        <div th:if="${postVO.file1.endsWith('jpg') or postVO.file1.endsWith('png')  or postVO.file1.endsWith('gif')}">
+        <div th:if="${postVO.file1.endsWith('jpg') or postVO.file1.endsWith('png') or postVO.file1.endsWith('gif') or postVO.file1.endsWith('jpeg')}">
           <img th:src="@{|/contents/storage/${postVO.thumb1}|}" style="width: 120px; height: 90px;">
         </div>
 
-        <div th:if="${((postVO.file1.endsWith('jpg') or postVO.file1.endsWith('png')  or postVO.file1.endsWith('gif')) == false) and (postVO.size1 > 0)}">
+        <div th:if="${((postVO.file1.endsWith('jpg') or postVO.file1.endsWith('png') or postVO.file1.endsWith('gif') or postVO.file1.endsWith('jpeg')) == false) and (postVO.size1 > 0)}">
           <span th:text="${postVO.file1}"></span>
         </div>
 
@@ -43,7 +50,7 @@
         </div>
 
       </td>
-
+      </td>
       <td class='td_left'>
         <span th:text="${postVO.title}" style="font-weight: bold;"></span><br>
         <span th:if="${postVO.content.length() > 160 }"

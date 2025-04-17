@@ -95,25 +95,6 @@ public class CateProc implements CateProcInter{
     return list;
   }
 
-//  @Override
-//  public ArrayList<MenuVO> menu() {
-//    ArrayList<MenuVO> menu = new ArrayList<MenuVO>();
-//    ArrayList<CategoryVO> grps = this.cateDAOInter.list_all_grp_y();
-//
-//    for (CategoryVO cateVO : grps) {
-//      MenuVO menuVO = new MenuVO();
-//
-//      menuVO.setGenre(cateVO.getGenre());
-//
-//      ArrayList<CategoryVO> list_name = this.cateDAOInter.list_all_name_y(cateVO.getGenre());
-//      menuVO.setList_name(list_name);
-//
-//      menu.add(menuVO);
-//    }
-//
-//    return menu;
-//  }
-
   @Override
   public ArrayList<MenuVO> menu() {
     ArrayList<MenuVO> menu = new ArrayList<MenuVO>();
@@ -124,22 +105,41 @@ public class CateProc implements CateProcInter{
 
       menuVO.setGenre(cateVO.getGenre());
 
-      // list_name을 가져오고 중복 제거 및 정렬 처리
       ArrayList<CategoryVO> list_name = this.cateDAOInter.list_all_name_y(cateVO.getGenre());
-
-      // 중복 제거 및 era 기준으로 정렬
-      ArrayList<CategoryVO> uniqueSortedCategories = list_name.stream()
-              .distinct() // 중복 제거
-              .sorted((c1, c2) -> c1.getEra().compareTo(c2.getEra())) // era 기준 오름차순 정렬
-              .collect(Collectors.toCollection(ArrayList::new)); // 명시적으로 ArrayList로 변환
-
-      menuVO.setList_name(uniqueSortedCategories);
+      menuVO.setList_name(list_name);
 
       menu.add(menuVO);
     }
 
     return menu;
   }
+
+//  @Override
+//  public ArrayList<MenuVO> menu() {
+//    ArrayList<MenuVO> menu = new ArrayList<MenuVO>();
+//    ArrayList<CategoryVO> grps = this.cateDAOInter.list_all_grp_y();
+//
+//    for (CategoryVO cateVO : grps) {
+//      MenuVO menuVO = new MenuVO();
+//
+//      menuVO.setGenre(cateVO.getGenre());
+//
+//      // list_name을 가져오고 중복 제거 및 정렬 처리
+//      ArrayList<CategoryVO> list_name = this.cateDAOInter.list_all_name_y(cateVO.getGenre());
+//
+//      // 중복 제거 및 era 기준으로 정렬
+//      ArrayList<CategoryVO> uniqueSortedCategories = list_name.stream()
+//              .distinct() // 중복 제거
+//              .sorted((c1, c2) -> c1.getEra().compareTo(c2.getEra())) // era 기준 오름차순 정렬
+//              .collect(Collectors.toCollection(ArrayList::new)); // 명시적으로 ArrayList로 변환
+//
+//      menuVO.setList_name(uniqueSortedCategories);
+//
+//      menu.add(menuVO);
+//    }
+//
+//    return menu;
+//  }
 
 
 

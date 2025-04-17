@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+
+<html layout:decorate="~{layout}" xmlns:layout="http://www.w3.org/1999/xhtml"> <!-- layout.html 상속-->
+<div layout:fragment="content">
+  <div class='title_line'>
+    <span th:text="${categoryVO.genre }" class="title_line_text"></span >
+    > <span th:text="${categoryVO.artist}" class="title_line_text"></span >
+    > 글 조회
+  </div>
+
+  <aside class="aside_right" th:if="${session.user_level == 'admin'}">
+    <a href="javascript:location.reload();">새로고침</a>
+    <span class='menu_divide' >│</span>
+    <a th:href="@{|./list_by_cateno?cate_id=${categoryVO.id}&word=${word }&now_page=${now_page}|}">목록형</a>
+    <span class='menu_divide' >│</span>
+    <a th:href="@{|./list_by_cateno_grid?cate_id=${categoryVO.id}&word=${word }&now_page=${now_page}|}">갤러리형</a>
+    <span class='menu_divide' >│</span>
+    <a href="./create?cate_id=${cate_id}">등록</a>
+    <span class='menu_divide' >│</span>
+    <a th:href="@{|/posts/update_text?post_no=${postVO.post_no}&now_page=${now_page}&word=${word }|}">글 수정</a>
+    <span class='menu_divide' >│</span>
+    <a th:href="@{|./update_file?post_no=${postVO.post_no}&word=${word}&now_page=${now_page}|}">파일 수정</a>
+    <span class='menu_divide' >│</span>
+    <a th:href="@{|/posts/map?cate_id=${postVO.cate_id }&post_no=${postVO.post_no}|}">지도</a>
+    <span class='menu_divide' >│</span>
+    <a th:href="@{|/posts/youtube?cate_id=${postVO.cate_id }&post_no=${postVO.post_no}&word=${word}&now_page=${now_page}|}">Youtube</a>
+    <span class='menu_divide' >│</span>
+    <a th:href="@{|./delete?post_no=${postVO.post_no}&word=${word}&now_page=${now_page}&cate_id=${postVO.cate_id}|}">삭제</a>
+  </aside>
+
+  <aside class="aside_right" th:if="${session.grade != 'admin'}">
+    <a href="javascript:location.reload();">새로고침</a>
+    <span class='menu_divide' >│</span>
+    <a th:href="@{|./list_by_cateno?cate_id=${categoryVO.id}&word=${word }&now_page=${now_page}|}">목록형</a>
+    <span class='menu_divide' >│</span>
+    <a th:href="@{|./list_by_cateno_grid?cate_id=${categoryVO.id }&word=${word }&now_page=${now_page}|}">갤러리형</a>
+  </aside>
+
+  <div class='menu_line'></div>
+
+  <fieldset class="fieldset_basic">
+    <ul>
+      <li class="li_none">
+        <div style="width: 100%; word-break: break-all;">
+
+          <div th:if="${postVO.file1.endsWith('jpg') or postVO.file1.endsWith('png') or postVO.file1.endsWith('gif') or postVO.file1.endsWith('jpeg')}">
+            <img th:src="@{|/contents/storage/${postVO.file1saved}|}"
+                 style='width: 50%; float: left; margin-top: 0.5%; margin-right: 1%;'>
+          </div>
+
+          <span style="font-size: 1.5em; font-weight: bold;" th:text="${postVO.title}"></span>
+          <span style="font-size: 1em;" th:text="${postVO.rdate }"></span><br><br>
+          <div style="white-space: pre-wrap;"><span th:text="${postVO.content}"></span></div>
+        </div>
+      </li>
+
+      <li class="li_none" style="clear: both; padding-top: 10px; padding-bottom: 25px;"
+          th:if="${postVO.map.length() > 0}">
+        <div style='text-align: center; width:640px; margin: 0px auto;'
+             th:utext = "${postVO.map }">
+        </div>
+      </li>
+
+      <li class="li_none" style="clear: both; padding-top: 10px; padding-bottom: 25px;"
+          th:if="${postVO.youtube.length() > 0}">
+        <div style='text-align: center; width:640px; margin: 0px auto;'
+             th:utext = "${postVO.youtube }">
+        </div>
+      </li>
+
+      <li class="li_none" th:text="|검색어(키워드): ${postVO.word }|">
+      </li>
+
+      <li class="li_none" th:if="${postVO.size1 > 0}">
+        <div >
+          첨부 파일: <a th:href='@{|/download?dir=contents/storage&filename=${postVO.file1saved}&downname=${postVO.file1}|}'
+                    th:text='|${postVO.file1}|'></a> <span th:text="|(${postVO.size1_label})|"></span>
+          <a th:href='@{|/download?dir=contents/storage&filename=${postVO.file1saved}&downname=${postVO.file1}|}'><img src="/posts/images/download.png"></a>
+        </div>
+      </li>
+    </ul>
+  </fieldset>
+
+</div>
+
+</html>
