@@ -16,26 +16,25 @@
     <div class="flex_div_center" style="width: 90%; margin: 0px auto;">
         <form name="frm" method="post" action="/cate/create" th:object="${categoryVO}">
             <input type="hidden" name="word" th:value="${word}"> <!--/* 값 유지 */-->
-
-            <div style="margin-right: 2px; width: 15%; float: left;">
-                <input type="text" name="title" value="" autofocus="autofocus"
-                       class="form-control fom-control-sm" style="width: 100%; margin-bottom: 5px;" th:field="*{title}" placeholder="노래 재목">
+            <div style="margin-right: 2px; width: 10%; float: left;">
+                <input type="text" name="genre" value="" autofocus="autofocus"
+                       class="form-control fom-control-sm" style="width: 100%; margin-bottom: 5px" th:field="*{genre}" placeholder="장르">
             </div>
             <div style="margin-right: 2px; width: 15%; float: left;">
                 <input type="text" name="artist" value="" autofocus="autofocus"
                        class="form-control fom-control-sm" style="width: 100%; margin-bottom: 5px" th:field="*{artist}" placeholder="가수 / 아티스트">
             </div>
-            <div style="margin-right: 2px; width: 10%; float: left;">
-                <input type="text" name="genre" value="" autofocus="autofocus"
-                       class="form-control fom-control-sm" style="width: 100%; margin-bottom: 5px" th:field="*{genre}" placeholder="장르">
+            <div style="margin-right: 2px; width: 15%; float: left;">
+                <input type="text" name="title" value="" autofocus="autofocus"
+                       class="form-control fom-control-sm" style="width: 100%; margin-bottom: 5px;" th:field="*{title}" placeholder="노래 재목">
             </div>
             <div style="margin-right: 2px; width: 13%; float: left;">
                 <input type="text" name="mood" value="" autofocus="autofocus"
                        class="form-control fom-control-sm" style="width: 100%; margin-bottom: 5px" th:field="*{mood}" placeholder="어울리는 분위기">
             </div>
             <div style="margin-right: 2px; width: 10%; float: left;">
-                <input type="text" name="era" value="" autofocus="autofocus"
-                       class="form-control fom-control-sm" style="width: 100%; margin-bottom: 5px" th:field="*{era}" placeholder="자료수">
+                <input type="text" name="seqno" value="" autofocus="autofocus"
+                       class="form-control fom-control-sm" style="width: 100%; margin-bottom: 5px" th:field="*{seqno}" placeholder="자료수">
 <!--                <datalist id="yearList">-->
 <!--                    <option th:each="year : ${#numbers.sequence(2025, 1900, -1)}" th:value="${year}" th:text="${year}"></option>-->
 <!--                </datalist>-->
