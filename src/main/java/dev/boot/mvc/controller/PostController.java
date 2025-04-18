@@ -48,7 +48,7 @@ public class PostController {
    *
    * @return
    */
-  @GetMapping(value = "/msg")
+  @GetMapping(value = "/post2get")
   public String post2get(Model model, String url) {
     ArrayList<MenuVO> menu = this.cateProcInter.menu();
     model.addAttribute("menu", menu);
@@ -124,8 +124,8 @@ public class PostController {
         } else { // 전송 못하는 파일 형식
           ra.addFlashAttribute("code", Tool.UPLOAD_FILE_CHECK_FAIL); // 업로드 할 수 없는 파일
           ra.addFlashAttribute("cnt", 0); // 업로드 실패
-          ra.addFlashAttribute("url", "/posts/msg"); // msg.html, redirect parameter 적용
-          return "redirect:/posts/msg"; // Post -> Get - param...
+          ra.addFlashAttribute("url", "posts/msg"); // msg.html, redirect parameter 적용
+          return "redirect:/posts/post2get"; // Post -> Get - param...
         }
       } else { // 글만 등록하는 경우
         System.out.println("-> 글만 등록");
@@ -174,8 +174,8 @@ public class PostController {
       } else {
         ra.addFlashAttribute("code", Tool.CREATE_FAIL); // DBMS 등록 실패
         ra.addFlashAttribute("cnt", 0); // 업로드 실패
-        ra.addFlashAttribute("url", "/posts/msg"); // msg.html, redirect parameter 적용
-        return "redirect:/posts/msg"; // Post -> Get - param...
+        ra.addFlashAttribute("url", "posts/msg"); // msg.html, redirect parameter 적용
+        return "redirect:/posts/post2get"; // Post -> Get - param...
       }
     } else { // 로그인 실패 한 경우
       return "redirect:/user/login_cookie_need?url=/posts/create?cate_id=" + postVO.getCate_id(); // /member/login_cookie_need.html
@@ -502,5 +502,284 @@ public class PostController {
     return "redirect:/posts/read";
   }
 
+
+  /**
+   * 수정 폼
+   *
+   */
+  @GetMapping(value = "/update_text")
+  public String update_text(HttpSession session,
+                            Model model,
+                            @RequestParam(name = "post_no", defaultValue = "0") int post_no,
+                            RedirectAttributes ra,
+                            @RequestParam(name = "word", defaultValue = "") String word,
+                            @RequestParam(name = "now_page", defaultValue = "0") int now_page) {
+    ArrayList<MenuVO> menu = this.cateProcInter.menu();
+    model.addAttribute("menu", menu);
+
+    model.addAttribute("word", word);
+    model.addAttribute("now_page", now_page);
+
+    if (this.userProcinter.isAdmin(session)) { // 관리자로 로그인한경우
+      PostVO postVO = this.postProcInter.read(post_no);
+      model.addAttribute("postVO", postVO);
+
+      CategoryVO categoryVO = this.cateProcInter.read(postVO.getCate_id());
+      model.addAttribute("categoryVO", categoryVO);
+
+      return "posts/update_text"; // /templates/contents/update_text.html
+      // String content = "장소:\n인원:\n준비물:\n비용:\n기타:\n";
+      // model.addAttribute("content", content);
+
+    } else {
+      // 로그인 후 텍스트 수정 폼이 자동으로 열림.
+      return "redirect:/user/login_cookie_need?url=/posts/update_text?post_no=" + post_no; // @GetMapping(value = "/read")
+    }
+
+  }
+
+
+  /**
+   * 수정 처리
+   *
+   * @return
+   */
+  @PostMapping(value = "/update_text")
+  public String update_text(HttpSession session, Model model, PostVO postVO,
+                            RedirectAttributes ra,
+                            @RequestParam(name = "search_word", defaultValue = "") String search_word, // contentsVO.word와 구분 필요
+                            @RequestParam(name = "now_page", defaultValue = "0") int now_page) {
+    ra.addAttribute("word", search_word);
+    ra.addAttribute("now_page", now_page);
+
+    if (this.userProcinter.isAdmin(session)) { // 관리자 로그인 확인
+      HashMap<String, Object> map = new HashMap<String, Object>();
+      map.put("post_no", postVO.getPost_no());
+      map.put("password", postVO.getPassword());
+
+      if (this.postProcInter.password_check(map) == 1) { // 패스워드 일치
+        this.postProcInter.update_text(postVO); // 글수정
+
+        // mav 객체 이용
+        ra.addAttribute("post_no", postVO.getPost_no());
+        ra.addAttribute("cateno", postVO.getCate_id());
+        return "redirect:/posts/read"; // @GetMapping(value = "/read")
+
+      } else { // 패스워드 불일치
+        ra.addFlashAttribute("code", Tool.PASSWORD_FAIL); // redirect -> forward -> html
+        ra.addFlashAttribute("cnt", 0);
+        ra.addAttribute("url", "posts/msg"); // msg.html, redirect parameter 적용
+
+        return "redirect:/posts/post2get"; // @GetMapping(value = "/post2get")
+      }
+    } else { // 정상적인 로그인이 아닌 경우 로그인 유도
+      ra.addAttribute("url", "/user/login_cookie_need"); // /templates/member/login_cookie_need.html
+      return "redirect:/posts/post2get"; // @GetMapping(value = "/msg")
+    }
+  }
+
+  /**
+   * 파일 수정 폼
+   *
+   * @return
+   */
+  @GetMapping(value = "/update_file")
+  public String update_file(HttpSession session, Model model,
+                            @RequestParam(name = "post_no", defaultValue = "0") int post_no,
+                            @RequestParam(name = "word", defaultValue = "") String word,
+                            @RequestParam(name = "now_page", defaultValue = "1") int now_page) {
+    if (this.userProcinter.isAdmin(session)){
+      ArrayList<MenuVO> menu = this.cateProcInter.menu();
+      model.addAttribute("menu", menu);
+
+      model.addAttribute("word", word);
+      model.addAttribute("now_page", now_page);
+
+      PostVO postVO = this.postProcInter.read(post_no);
+      model.addAttribute("postVO", postVO);
+
+      CategoryVO categoryVO = this.cateProcInter.read(postVO.getCate_id());
+      model.addAttribute("categoryVO", categoryVO);
+
+      return "/posts/update_file";
+    } else {
+      return "redirect:/user/login_cookie_need?url=/posts/update_file?post_no=" + post_no;
+    }
+  }
+
+
+
+  /**
+   * 파일 수정 처리 http://localhost:9091/contents/update_file
+   *
+   * @return
+   */
+  @PostMapping(value = "/update_file")
+  public String update_file(HttpSession session, Model model, RedirectAttributes ra,
+                            PostVO postVO,
+                            @RequestParam(name = "word", defaultValue = "") String word,
+                            @RequestParam(name = "now_page", defaultValue = "1") int now_page) {
+
+    if (this.userProcinter.isAdmin(session)) {
+      // 삭제할 파일 정보를 읽어옴, 기존에 등록된 레코드 저장용
+      PostVO postVO_old = postProcInter.read(postVO.getPost_no());
+
+      // -------------------------------------------------------------------
+      // 파일 삭제 시작
+      // -------------------------------------------------------------------
+      String file1saved = postVO_old.getFile1saved(); // 실제 저장된 파일명
+      String thumb1 = postVO_old.getThumb1(); // 실제 저장된 preview 이미지 파일명
+      long size1 = 0;
+
+      String upDir = Posts.getUploadDir(); // C:/kd/deploy/resort_v4sbm3c/contents/storage/
+
+      Tool.deleteFile(upDir, file1saved); // 실제 저장된 파일삭제
+      Tool.deleteFile(upDir, thumb1); // preview 이미지 삭제
+      // -------------------------------------------------------------------
+      // 파일 삭제 종료
+      // -------------------------------------------------------------------
+
+      // -------------------------------------------------------------------
+      // 파일 전송 시작
+      // -------------------------------------------------------------------
+      String file1 = ""; // 원본 파일명 image
+
+      // 전송 파일이 없어도 file1MF 객체가 생성됨.
+      // <input type='file' class="form-control" name='file1MF' id='file1MF'
+      // value='' placeholder="파일 선택">
+      MultipartFile mf = postVO.getFile1MF();
+
+      file1 = mf.getOriginalFilename(); // 원본 파일명
+      size1 = mf.getSize(); // 파일 크기
+
+      if (size1 > 0) { // 폼에서 새롭게 올리는 파일이 있는지 파일 크기로 체크 ★
+        // 파일 저장 후 업로드된 파일명이 리턴됨, spring.jsp, spring_1.jpg...
+        file1saved = Upload.saveFileSpring(mf, upDir);
+
+        if (Tool.isImage(file1saved)) { // 이미지인지 검사
+          // thumb 이미지 생성후 파일명 리턴됨, width: 250, height: 200
+          thumb1 = Tool.preview(upDir, file1saved, 250, 200);
+        }
+
+      } else { // 파일이 삭제만 되고 새로 올리지 않는 경우
+        file1 = "";
+        file1saved = "";
+        thumb1 = "";
+        size1 = 0;
+      }
+
+      postVO.setFile1(file1);
+      postVO.setFile1saved(file1saved);
+      postVO.setThumb1(thumb1);
+      postVO.setSize1(size1);
+      // -------------------------------------------------------------------
+      // 파일 전송 코드 종료
+      // -------------------------------------------------------------------
+
+      this.postProcInter.update_file(postVO); // Oracle 처리
+      ra.addAttribute ("post_no", postVO.getPost_no());
+      ra.addAttribute("cate_id", postVO.getCate_id());
+      ra.addAttribute("word", word);
+      ra.addAttribute("now_page", now_page);
+
+      return "redirect:/posts/read";
+    } else {
+      ra.addAttribute("url", "/user/login_cookie_need");
+      return "redirect:/posts/post2get"; // GET
+    }
+  }
+
+
+
+  /**
+   * 파일 삭제 폼
+   *
+   *
+   * @return
+   */
+  @GetMapping(value = "/delete")
+  public String delete(HttpSession session, Model model, RedirectAttributes ra,
+                       @RequestParam(name = "cate_id", defaultValue = "0") int cate_id,
+                       @RequestParam(name = "post_no", defaultValue = "0") int post_no,
+                       @RequestParam(name = "word", defaultValue = "") String word,
+                       @RequestParam(name = "now_page", defaultValue = "1") int now_page) {
+    if (this.userProcinter.isAdmin(session)) { // 관리자로 로그인한경우
+      model.addAttribute("cate_id", cate_id);
+      model.addAttribute("word", word);
+      model.addAttribute("now_page", now_page);
+
+      ArrayList<MenuVO> menu = this.cateProcInter.menu();
+      model.addAttribute("menu", menu);
+
+      PostVO postVO = this.postProcInter.read(post_no);
+      model.addAttribute("postVO", postVO);
+
+      CategoryVO categoryVO = this.cateProcInter.read(postVO.getCate_id());
+      model.addAttribute("categoryVO", categoryVO);
+
+      return "/posts/delete"; // forward
+
+    } else {
+      return "redirect:/user/login_cookie_need?url=/posts/delete?post_no=" + post_no;
+    }
+
+  }
+
+
+  /**
+   * 삭제 처리
+   *
+   * @return
+   */
+  @PostMapping(value = "/delete")
+  public String delete(RedirectAttributes ra,
+                       @RequestParam(name = "post_no", defaultValue = "0") int post_no,
+                       @RequestParam(name = "cate_id", defaultValue = "0") int cate_id,
+                       @RequestParam(name = "word", defaultValue = "") String word,
+                       @RequestParam(name = "now_page", defaultValue = "1") int now_page) {
+    // -------------------------------------------------------------------
+    // 파일 삭제 시작
+    // -------------------------------------------------------------------
+    // 삭제할 파일 정보를 읽어옴.
+    PostVO postVO_read = postProcInter.read(post_no);
+
+    String file1saved = postVO_read.getFile1saved();
+    String thumb1 = postVO_read.getThumb1();
+
+    String uploadDir = Posts.getUploadDir();
+    Tool.deleteFile(uploadDir, file1saved);  // 실제 저장된 파일삭제
+    Tool.deleteFile(uploadDir, thumb1);     // preview 이미지 삭제
+    // -------------------------------------------------------------------
+    // 파일 삭제 종료
+    // -------------------------------------------------------------------
+
+    this.postProcInter.delete(post_no); // DBMS 삭제
+
+    // -------------------------------------------------------------------------------------
+    // 마지막 페이지의 마지막 레코드 삭제시의 페이지 번호 -1 처리
+    // -------------------------------------------------------------------------------------
+    // 마지막 페이지의 마지막 10번째 레코드를 삭제후
+    // 하나의 페이지가 3개의 레코드로 구성되는 경우 현재 9개의 레코드가 남아 있으면
+    // 페이지수를 4 -> 3으로 감소 시켜야함, 마지막 페이지의 마지막 레코드 삭제시 나머지는 0 발생
+
+    HashMap<String, Object> map = new HashMap<String, Object>();
+    map.put("cate_id", cate_id);
+    map.put("word", word);
+
+    if (this.postProcInter.list_by_cateno_search_count(map) % Posts.RECORD_PER_PAGE == 0) {
+      now_page = now_page - 1; // 삭제시 DBMS는 바로 적용되나 크롬은 새로고침등의 필요로 단계가 작동 해야함.
+      if (now_page < 1) {
+        now_page = 1; // 시작 페이지
+      }
+    }
+    // -------------------------------------------------------------------------------------
+
+    ra.addAttribute("cate_id", cate_id);
+    ra.addAttribute("word", word);
+    ra.addAttribute("now_page", now_page);
+
+    return "redirect:/posts/list_by_cateno";
+
+  }
 
 }

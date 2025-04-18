@@ -34,6 +34,10 @@ public class Tool {
   /** 파일 업로드 실패 */
   public static final String UPLOAD_FILE_CHECK_FAIL = "upload_file_check_fail";
 
+  /** 패스워드 실패 */
+  public static final String PASSWORD_FAIL = "password_fail";
+
+
   /**
    * FileUpload 1.2, 1.3 한글 변환
    * @param str
@@ -474,13 +478,13 @@ public class Tool {
     String path = "";
 
     if (osName.contains("win")) { // Windows
-      path = "C:\\kd\\deploy\\resort\\";
+      path = "C:\\kd\\deploy\\musicblog\\";
       // System.out.println("Windows: " + path);
     } else if (osName.contains("mac")) { // MacOS
-      path = "/Users/yourusername/deploy/resort/";
+      path = "/Users/yourusername/deploy/musicblog/";
       // System.out.println("MacOS: " + path);
     } else { // Linux
-      path = "/home/ubuntu/deploy/resort/";
+      path = "/home/ubuntu/deploy/musicblog/";
       // System.out.println("Linux: " + path);
     }
 
