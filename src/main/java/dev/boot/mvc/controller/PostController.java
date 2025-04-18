@@ -22,6 +22,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 @RequestMapping("/posts")
 @Controller
@@ -165,6 +166,19 @@ public class PostController {
         // controller: X
 
 //        return "redirect:/contents/list_all";
+
+        int count = this.postProcInter.count_by_cateno(postVO.getCate_id());
+        System.out.println("cate_id: " + postVO.getCate_id());
+        System.out.println("-> count(컨텐츠 갯수): " + count);
+//
+        Map<String, Object> params = new HashMap<>();
+        params.put("id", postVO.getCate_id());
+        params.put("era", count);
+        this.cateProcInter.update_cnt_by_cateno(params);
+
+        this.cateProcInter.update_cnt_by_grp();
+
+
 
         ra.addAttribute("cate_id", postVO.getCate_id()); // controller -> controller: O
         return "redirect:/posts/list_by_cateno";
@@ -733,6 +747,7 @@ public class PostController {
    */
   @PostMapping(value = "/delete")
   public String delete(RedirectAttributes ra,
+                       @ModelAttribute("postVO")PostVO postVO,
                        @RequestParam(name = "post_no", defaultValue = "0") int post_no,
                        @RequestParam(name = "cate_id", defaultValue = "0") int cate_id,
                        @RequestParam(name = "word", defaultValue = "") String word,
@@ -772,6 +787,17 @@ public class PostController {
         now_page = 1; // 시작 페이지
       }
     }
+
+    int count = this.postProcInter.count_by_cateno(postVO.getCate_id());
+    System.out.println("cate_id: " + postVO.getCate_id());
+    System.out.println("-> count(컨텐츠 갯수): " + count);
+//
+    Map<String, Object> params = new HashMap<>();
+    params.put("id", postVO.getCate_id());
+    params.put("era", count);
+    this.cateProcInter.update_cnt_by_cateno(params);
+
+    this.cateProcInter.update_cnt_by_grp();
     // -------------------------------------------------------------------------------------
 
     ra.addAttribute("cate_id", cate_id);

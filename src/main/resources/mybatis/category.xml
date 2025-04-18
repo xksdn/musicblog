@@ -109,4 +109,24 @@
     </select>
 
 
+    <update id="update_cnt_by_cateno" parameterType="map">
+        UPDATE category
+        SET era = #{era}
+        WHERE id = #{id}
+            AND artist != '--'
+    </update>
+
+
+    <update id="update_cnt_by_grp">
+        UPDATE category
+        SET era = (
+            SELECT NVL(SUM(sub.era), 0)
+            FROM category sub
+            WHERE sub.genre = category.genre
+              AND sub.artist != '--'
+            )
+        WHERE artist = '--'
+    </update>
+
+
 </mapper>

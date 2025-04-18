@@ -40,4 +40,18 @@ public interface CateDAOInter {
    */
   public ArrayList<CategoryVO> list_search_paging(Map map);
 
+
+  /**
+   * 중분류의 cnt 값을 직접 업데이트하는 쿼리
+   * @param params cateno와 cnt를 담은 Map
+   * @return 업데이트된 레코드 수
+   */
+  public int update_cnt_by_cateno(Map<String, Object> params);
+
+  /**
+   * 대분류의 cnt 값을 중분류들의 cnt 합계로 업데이트하는 쿼리
+   * @return 업데이트된 레코드 수
+   */
+  public int update_cnt_by_grp();
+
 }

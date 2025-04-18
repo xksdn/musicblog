@@ -226,4 +226,23 @@ public class CateProc implements CateProcInter{
 
     return str.toString();
   }
+
+  @Override
+  public int update_cnt_by_cateno(Map<String, Object> params) {
+    int cnt = cateDAOInter.update_cnt_by_cateno(params);
+
+    return cnt;
+  }
+
+  @Override
+  public int update_cnt_by_grp() {
+    int cnt = cateDAOInter.update_cnt_by_grp();
+    return cnt;
+  }
+
+
+
+
 }
+
+

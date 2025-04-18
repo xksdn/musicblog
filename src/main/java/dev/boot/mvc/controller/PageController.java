@@ -24,6 +24,9 @@ import java.util.ArrayList;
 @RequestMapping("/cate")
 public class PageController {
 
+  // http://localhost:9092/
+  // http://192.168.12.151:9092/
+
   @Autowired
   private CateProcInter cateProcInter;
 

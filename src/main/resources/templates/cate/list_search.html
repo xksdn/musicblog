@@ -34,11 +34,11 @@
                        class="form-control fom-control-sm" style="width: 100%; margin-bottom: 5px" th:field="*{mood}" placeholder="어울리는 분위기">
             </div>
             <div style="margin-right: 2px; width: 10%; float: left;">
-                <input type="text" name="era" value="" autofocus="autofocus" list="yearList"
-                       class="form-control fom-control-sm" style="width: 100%; margin-bottom: 5px" th:field="*{era}" placeholder="발표된 시대">
-                <datalist id="yearList">
-                    <option th:each="year : ${#numbers.sequence(2025, 1900, -1)}" th:value="${year}" th:text="${year}"></option>
-                </datalist>
+                <input type="text" name="era" value="" autofocus="autofocus"
+                       class="form-control fom-control-sm" style="width: 100%; margin-bottom: 5px" th:field="*{era}" placeholder="자료수">
+<!--                <datalist id="yearList">-->
+<!--                    <option th:each="year : ${#numbers.sequence(2025, 1900, -1)}" th:value="${year}" th:text="${year}"></option>-->
+<!--                </datalist>-->
             </div>
             <div style="margin-right: 2px; width: 10%; float: left;">
                 <input type="text" name="region" value="" autofocus="autofocus"

@@ -138,7 +138,7 @@
     <select id="count_by_cateno" resultType="int" parameterType="int">
         SELECT COUNT(*) as cnt
         FROM music_post
-        WHERE post_no=#{post_no}
+        WHERE cate_id=#{cate_id}
     </select>
 
 

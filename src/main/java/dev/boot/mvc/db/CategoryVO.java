@@ -27,7 +27,7 @@ public class CategoryVO {
   private String mood;
   
   /* 발매 연도 */ 
-  private String era;
+  private int era;
   
   /* 발매 지역 */
   private String region;

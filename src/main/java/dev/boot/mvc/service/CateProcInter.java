@@ -6,6 +6,7 @@ import dev.boot.mvc.db.MenuVO;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Map;
 
 public interface CateProcInter {
 
@@ -44,5 +45,19 @@ public interface CateProcInter {
 
   String pagingBox(int now_page, String word, String list_url, int search_count, int record_per_page,
                    int page_per_block);
+
+
+  /**
+   * 중분류의 cnt 값을 직접 업데이트하는 쿼리
+   * @param params cateno와 cnt를 담은 Map
+   * @return 업데이트된 레코드 수
+   */
+  public int update_cnt_by_cateno(Map<String, Object> params);
+
+  /**
+   * 대분류의 cnt 값을 중분류들의 cnt 합계로 업데이트하는 쿼리
+   * @return 업데이트된 레코드 수
+   */
+  public int update_cnt_by_grp();
 
 }
