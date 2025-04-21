@@ -3,6 +3,7 @@ package dev.boot.mvc.controller;
 import dev.boot.mvc.db.MenuVO;
 import dev.boot.mvc.db.UserVO;
 import dev.boot.mvc.service.CateProcInter;
+import dev.boot.mvc.service.PostProcInter;
 import dev.boot.mvc.service.UserProcinter;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,6 +23,7 @@ import java.util.HashMap;
 
 // http://localhost:9092/user
 // http://192.168.12.151:9092/user
+// http://192.168.12.151:9092/
 
 @Controller
 @RequestMapping("/user")
@@ -33,6 +35,9 @@ public class UserController {
 
   @Autowired
   private CateProcInter cateProc;
+
+  @Autowired
+  private PostProcInter postProcInter;
 
   public UserController () {
     System.out.println("-> MemberCont created.");
@@ -187,6 +192,9 @@ public class UserController {
           Model model,
           @RequestParam(name = "user_no", defaultValue = "") int user_no
   ) {
+    int count = this.postProcInter.count_by_memberno(user_no);
+    model.addAttribute("count", count);
+
     UserVO userVO = this.userProc.read(user_no);
     model.addAttribute("userVO", userVO);
 
@@ -198,8 +206,13 @@ public class UserController {
   @PostMapping("/delete")
   public String delete_proces (
           Model model,
-          @RequestParam(name = "user_no", defaultValue = "") int user_no
+          @RequestParam(name = "user_no", defaultValue = "") int user_no,
+          @RequestParam("delete_mode") String deleteMode
   ) {
+    if (deleteMode.equals("with_contents")) {
+      this.postProcInter.delete_by_memberno(user_no);
+    }
+
     int cnt = this.userProc.delete(user_no);
 
     if (cnt == 1) {

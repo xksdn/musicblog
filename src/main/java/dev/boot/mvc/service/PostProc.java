@@ -241,6 +241,13 @@ public class PostProc implements PostProcInter {
   }
 
   @Override
+  public int delete_by_memberno(int user_no) {
+    int cnt = this.postDAOinter.delete_by_memberno(user_no);
+
+    return cnt;
+  }
+
+  @Override
   public int count_by_memberno(int user_no) {
     int cnt = this.postDAOinter.count_by_memberno(user_no);
 

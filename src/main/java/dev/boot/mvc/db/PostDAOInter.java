@@ -124,6 +124,13 @@ public interface PostDAOInter {
    */
   public int delete_by_cateno(int cate_id);
 
+  /**
+   * 특정 카테고리에 속한 모든 레코드 삭제
+   * @param user_no
+   * @return 삭제된 레코드 갯수
+   */
+  public int delete_by_memberno(int user_no);
+
 
   /**
    * 특정 회원이 작성한 게시글 개수를 조회합니다.

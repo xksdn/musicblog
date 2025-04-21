@@ -44,7 +44,7 @@
                        class="form-control fom-control-sm" style="width: 100%; margin-bottom: 5px" th:field="*{region}" placeholder="발표 지역">
             </div>
             <div style="margin-right: 2px; width: 12%; float: left;">
-                <select id="visible" name="visible" class="form-control">
+                <select id="visible" name="visible" th:field="*{visible}" class="form-control">
                     <option value="출력 모드">출력 모드</option>
                     <option value="Y" selected="selected">Y</option>
                     <option value="N">N</option>

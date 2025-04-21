@@ -4,6 +4,7 @@ import dev.boot.mvc.db.CateDAOInter;
 import dev.boot.mvc.db.CategoryVO;
 import dev.boot.mvc.db.MenuVO;
 import dev.boot.mvc.service.CateProcInter;
+import dev.boot.mvc.service.PostProcInter;
 import dev.boot.mvc.service.UserProcinter;
 import dev.boot.mvc.tool.Tool;
 import jakarta.servlet.http.HttpSession;
@@ -32,6 +33,9 @@ public class PageController {
 
   @Autowired
   private UserProcinter userProcinter;
+
+  @Autowired
+  private PostProcInter postProcInter;
 
   /** 페이지당 출력할 레코드 갯수, nowPage는 1부터 시작 */
   public int record_per_page = 6;
@@ -67,6 +71,8 @@ public class PageController {
       return "/cate/create";
     } else {
       int cnt = this.cateProcInter.create(categoryVO);
+
+      System.out.println("seqno: " + categoryVO.getSeqno());
 
       if (cnt == 1) {
         ra.addAttribute("word", word);
@@ -127,7 +133,9 @@ public class PageController {
       // 일련 변호 생성: 레코드 갯수 - ((현재 페이지수 -1) * 페이지당 레코드 수)
       int no = search_count - ((now_page - 1) * this.record_per_page);
       model.addAttribute("no", no);
+
       // --------------------------------------------------------------------------------------
+      this.cateProcInter.update_cnt_by_grp();
 
       return "cate/list_search";
     } else {
@@ -254,6 +262,9 @@ public class PageController {
 //    ArrayList<CategoryVO> list = this.cateProcInter.list_all();
 //    model.addAttribute("list", list);
 
+    CategoryVO count = this.cateProcInter.read(id);
+    model.addAttribute("count", count.getEra());
+
     CategoryVO categoryVO = this.cateProcInter.read(id);
     model.addAttribute("categoryVO", categoryVO);
 
@@ -288,7 +299,8 @@ public class PageController {
           @PathVariable("id") Integer id,
           @RequestParam(name = "word", defaultValue = "") String word,
           RedirectAttributes ra,
-          @RequestParam(name = "now_page", defaultValue = "1") int now_page
+          @RequestParam(name = "now_page", defaultValue = "1") int now_page,
+          @RequestParam("delete_mode") String deleteMode
   ) {
     CategoryVO categoryVO = this.cateProcInter.read(id);
     model.addAttribute("categoryVO", categoryVO);
@@ -296,7 +308,13 @@ public class PageController {
     ArrayList<CategoryVO> list = this.cateProcInter.list_all();
     model.addAttribute("list", list);
 
+    if (deleteMode.equals("with_contents")) {
+      this.postProcInter.delete_by_cateno(id);
+    }
+
     int cnt = this.cateProcInter.delete(id);
+
+    this.cateProcInter.update_cnt_by_grp();
 
     if (cnt == 1) {
       // 마지막 페이지에서 모든 레코드가 삭제되면 페이지수를 1 감소 시켜야함.

@@ -32,3 +32,41 @@ FROM category
 ORDER BY id ASC;
 
 SELECT id, title, visible FROM category WHERE visible IS NULL;
+
+
+UPDATE category
+SET era = 5
+WHERE id = 85
+  AND artist != '--';
+
+UPDATE category
+SET era = (
+    SELECT SUM(sub.era)
+    FROM category sub
+    WHERE sub.genre = category.genre
+      AND sub.artist != '--'
+)
+WHERE artist = '--';
+
+
+SELECT genre, artist, SUM(era)
+FROM category
+WHERE artist != '--'
+GROUP BY genre, artist
+ORDER BY genre;
+
+SELECT genre, SUM(era)
+FROM category
+WHERE artist != '--'
+GROUP BY genre;
+
+UPDATE category
+SET era = (
+    SELECT NVL(SUM(sub.era), 0)
+    FROM category sub
+    WHERE sub.genre = category.genre
+      AND sub.artist != '--'
+)
+WHERE artist = '--';
+
+

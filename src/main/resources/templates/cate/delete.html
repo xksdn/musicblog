@@ -23,7 +23,13 @@
             <input type="hidden" name="now_page" th:value="${now_page}"> <!--/* 값 유지 */-->
 
             <div class="msg_warning">
-                노래를 삭제하면 복구 할 수 없습니다.<br>삭제하시려면 [삭제] 버튼을 클릭하세요.
+                <div th:if="${count == 0}">
+                    카테고리를 삭제하면 복구 할 수 없습니다.<br>삭제하시려면 [삭제] 버튼을 클릭하세요.
+                </div>
+                <div th:if="${count != 0}">
+                    관련 자료가 <span th:text="${count}"></span>개 발견되었습니다.<br>
+                    관련 자료와 카테고리를 모두 삭제하시겠습니까?
+                </div>
             </div>
             <div style="width: 60%; margin: 0px auto; background-color: #DDDDDD;">
                 <label>노래 제목</label>: <span th:text="${categoryVO.title}"></span><br>
@@ -31,7 +37,19 @@
             </div>
 
             <div class="content_body_bottom">
-                <button type="submit" class="btn btn-secondary btn-sm">삭제</button>
+<!--                <button type="submit" class="btn btn-secondary btn-sm">삭제</button>-->
+                <button type="submit" th:if="${count == 0}"
+                        class="btn btn-secondary btn-sm"
+                        name="delete_mode" value="only">
+                    삭제
+                </button>
+
+                <button type="submit" th:if="${count != 0}"
+                        class="btn btn-secondary btn-sm"
+                        name="delete_mode" value="with_contents">
+                    관련 자료와 함께 카테고리 삭제
+                </button>
+
                 <button type="button" th:attr="onclick=|location.href='/cate/list_search?word=${word}&now_page=${now_page}'|" class="btn btn-secondary btn-sm">취소[목록]</button>
             </div>
 
