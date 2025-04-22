@@ -24,6 +24,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+// http://localhost:9092/
+// http://192.168.12.151:9092/
+
 @RequestMapping("/posts")
 @Controller
 public class PostController {

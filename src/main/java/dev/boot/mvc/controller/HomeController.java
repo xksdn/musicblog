@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.ArrayList;
 
+// http://localhost:9092/
+// http://192.168.12.151:9092/
+
 @Controller
 public class HomeController {
 

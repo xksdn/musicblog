@@ -1,6 +1,6 @@
 <div th:fragment="navbarFragment">
     <div class="top_menu_img">
-        <div class="top_menu_label">뮤직노트 ver 2.0</div>
+        <div class="top_menu_label">뮤직노트 ver 6.0</div>
     </div>
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
@@ -18,8 +18,8 @@
 
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink"
                            role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="${MenuVO.genre}">
-
                         </a>
+
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                             <li th:each="CategoryVO:${MenuVO.list_name}">
                                 <a class="dropdown-item" th:href="@{|/posts/list_by_cateno?cate_id=${CategoryVO.id}|}" th:text="${CategoryVO.artist}"></a>
@@ -27,19 +27,37 @@
                         </ul>
 
                     </li>
-                    <li class="nav-item" th:if="${session.user_level == 'admin'}">
-                        <a th:href="@{|/cate/list_search|}" class="nav-link">노래 목록</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" th:href="@{|/user/create|}">회원 가입</a>
-                    </li>
-                    <li class="nav-item" th:if="${session.user_level == 'admin'}">
-                        <a class="nav-link" th:href="@{|/user/list|}">회원 목록</a>
+
+                    <li class="nav-item"><a class="nav-link" th:href="@{|/calendar/list_calendar|}">음악 관련 일정</a></li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink"
+                           role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="회원">
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <li class="nav-item">
+                                <a class="nav-link" th:href="@{|/user/create|}">회원 가입</a>
+                            </li>
+                            <li class="nav-item" th:if="${session.user_no != null}">
+                                <a class="nav-link" th:href="@{|/user/passwd_update|}">비밀 번호 변경</a>
+                            </li>
+                        </ul>
                     </li>
 
-                    <li class="nav-item" th:if="${session.user_no != null}">
-                        <a class="nav-link" href="/user/passwd_update">비밀 번호 변경</a>
+                    <li class="nav-item dropdown" th:if="${session.user_level=='admin'}">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink"
+                           role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="관리자">
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <li class="nav-item"><a class="nav-link" th:href="@{|/cate/list_search|}">노래 목록</a></li>
+                            <li class="nav-item"><a class="nav-link" th:href="@{|/user/list|}">회원 목록</a></li>
+                            <li class="nav-item"><a class="nav-link" th:href="@{|/posts/list_all|}">전체 글 목록</a></li>
+                            <li class="nav-item"><a class="nav-link" th:href="@{|/calendar/create|}">일정 등록</a></li>
+                            <li class="nav-item"><a class="nav-link" th:href="@{|/calendar/list_all|}">일정 목록</a></li>
+
+                        </ul>
                     </li>
+
+
                     <li class="nav-item">
                         <span th:if="${session.user_no == null}"><a class="nav-link" href="/user/login" th:text="@{|로그인|}"></a></span>
                         <span th:if="${session.user_no != null}"><a class="nav-link" href="/user/logout" th:text="@{|${session.email} 로그아웃|}"></a></span>
