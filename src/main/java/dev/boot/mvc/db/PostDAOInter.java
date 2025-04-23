@@ -155,4 +155,23 @@ public interface PostDAOInter {
    */
   public int decreaseReplycnt(int post_no);
 
+
+  /**
+   * 추천 수 증가
+   * @param post_no
+   * @return
+   */
+  public int increaseRecom(int post_no);
+
+
+  /**
+   * 추천 수 감소
+   * @param post_no
+   * @return
+   */
+  public int decreaseRecom(int post_no);
+
+
+
+
 }

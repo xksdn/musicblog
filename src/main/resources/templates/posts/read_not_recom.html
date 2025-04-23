@@ -2,63 +2,6 @@
 
 <html layout:decorate="~{layout}" xmlns:layout="http://www.w3.org/1999/xhtml"> <!-- layout.html 상속-->
 <div layout:fragment="content">
-  <script>
-    window.onload = function() {
-      // <img src="/contents/images/hart_off_50.png" style="width: 22px" title="추천">
-      // <img src="/contents/images/hart_on_50.png" style="width: 22px" title="비추천">
-      // 현재 로그인한 사용자의 추천 여부 반영
-
-      let hartCnt = '[[${hartCnt}]]'; //  javascript -> Thymeleaf -> session
-      let tag='';
-
-      if (hartCnt == 1) {
-        tag = '<a href="javascript:good([[${postVO.post_no}]])"><img src="/posts/images/hart_on_50.png" style="width: 22px" title="추천"></a>';
-        document.querySelector('#hart_panel').innerHTML = tag;
-      } else {
-        tag = '<a href="javascript:good([[${postVO.post_no}]])"><img src="/posts/images/hart_off_50.png" style="width: 22px" title="추천"></a>';
-        document.querySelector('#hart_panel').innerHTML = tag;
-      }
-
-      document.querySelector('#recom_panel').innerHTML = '([[${postVO.recom}]])';
-    }
-
-    function good(post_no) {
-      console.log('-> post_no: ' + post_no);
-
-      fetch("/posts/good", {
-        "method": "post",
-        "headers": {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({post_no}) // {"contentsno":contentsno}, JSON 형식으로 전송
-      })
-          .then((response) => response.json()) // 응답 문자열 추출
-          .then((data) => {
-                console.log('-> data.isMember: ' + data.isMember);
-
-                if (data.isMember == 1) { // 회원
-                  let hartCnt =data.hartCnt; //  javascript -> Thymeleaf -> session
-                  let tag='';
-
-                  if (hartCnt == 1) {
-                    tag = '<a href="javascript:good([[${postVO.post_no}]])"><img src="/posts/images/hart_on_50.png" style="width: 22px" title="추천"></a>';
-                    document.querySelector('#hart_panel').innerHTML = tag;
-                  } else {
-                    tag = '<a href="javascript:good([[${postVO.post_no}]])"><img src="/posts/images/hart_off_50.png" style="width: 22px" title="추천"></a>';
-                    document.querySelector('#hart_panel').innerHTML = tag;
-                  }
-
-                  document.querySelector('#recom_panel').innerHTML = '(' + data.recom + ')';
-
-                } else { // 비회원
-                  alert("로그인해야 추천 할 수 있습니다.");
-                  location.href='/user/login_cookie_need';
-
-                }
-              }
-          );
-    }
-  </script>
   <div class='title_line'>
     <span th:text="${categoryVO.genre }" class="title_line_text"></span >
     > <span th:text="${categoryVO.artist}" class="title_line_text"></span >
@@ -133,7 +76,6 @@
           첨부 파일: <a th:href='@{|/download?dir=contents/storage&filename=${postVO.file1saved}&downname=${postVO.file1}|}'
                     th:text='|${postVO.file1}|'></a> <span th:text="|(${postVO.size1_label})|"></span>
           <a th:href='@{|/download?dir=contents/storage&filename=${postVO.file1saved}&downname=${postVO.file1}|}'><img src="/posts/images/download.png"></a>
-          <span id="hart_panel"></span><span id="recom_panel"></span>
         </div>
       </li>
     </ul>

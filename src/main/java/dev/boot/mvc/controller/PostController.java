@@ -4,14 +4,13 @@ package dev.boot.mvc.controller;
 import dev.boot.mvc.db.CategoryVO;
 import dev.boot.mvc.db.MenuVO;
 import dev.boot.mvc.db.PostVO;
-import dev.boot.mvc.service.CateProcInter;
-import dev.boot.mvc.service.PostProcInter;
-import dev.boot.mvc.service.Posts;
-import dev.boot.mvc.service.UserProcinter;
+import dev.boot.mvc.db.PostsgoodVO;
+import dev.boot.mvc.service.*;
 import dev.boot.mvc.tool.Tool;
 import dev.boot.mvc.tool.Upload;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -40,6 +39,9 @@ public class PostController {
 
   @Autowired
   private PostProcInter postProcInter;
+
+  @Autowired
+  private PostsgoodProcInter postsgoodProc;
 
   public PostController () {
     System.out.println("-> PostController created.");
@@ -384,6 +386,7 @@ public class PostController {
 
   @GetMapping(value = "/read")
   public String read(Model model,
+                     HttpSession session,
                      @RequestParam(name="post_no", defaultValue = "0") int post_no,
                      @RequestParam(name="word", defaultValue = "") String word,
                      @RequestParam(name="now_page", defaultValue = "1") int now_page) {
@@ -417,6 +420,24 @@ public class PostController {
 
     model.addAttribute("word", word);
     model.addAttribute("now_page", now_page);
+
+    // -------------------------------------------------------------------------------------------
+    // 추천 관련
+    // -------------------------------------------------------------------------------------------
+    HashMap<String, Object> map = new HashMap<String, Object>();
+    map.put("post_no", post_no);
+
+    int hartCnt = 0;
+    if (session.getAttribute("user_no") != null ) { // 회원인 경우만 카운트 처리
+      int user_no = (int)session.getAttribute("user_no");
+      map.put("user_no", user_no);
+
+      hartCnt = this.postsgoodProc.hartCnt(map);
+    }
+
+    model.addAttribute("hartCnt", hartCnt);
+    // -------------------------------------------------------------------------------------------
+
 
     return "posts/read";
   }
@@ -810,5 +831,71 @@ public class PostController {
     return "redirect:/posts/list_by_cateno";
 
   }
+
+  /**
+   * 추천 처리 http://localhost:9091/contents/good
+   *
+   * @return
+   */
+  @PostMapping(value = "/good")
+  @ResponseBody
+  public String good(HttpSession session, Model model, @RequestBody String json_src){
+    System.out.println("-> json_src: " + json_src); // json_src: {"contentsno":"5"}
+
+    JSONObject src = new JSONObject(json_src); // String -> JSON
+    int post_no = (int)src.get("post_no"); // 값 가져오기
+    System.out.println("-> post_no: " + post_no);
+
+    if (this.userProcinter.isMember(session)) { // 회원 로그인 확인
+      // 추천을 한 상태인지 확인
+      int user_no = (int)session.getAttribute("user_no");
+
+      HashMap<String, Object> map = new HashMap<String, Object>();
+      map.put("post_no", post_no);
+      map.put("user_no", user_no);
+
+      int good_cnt = this.postsgoodProc.hartCnt(map);
+      System.out.println("-> good_cnt: " + good_cnt);
+
+      if (good_cnt == 1) {
+        System.out.println("-> 추천 해제: " + post_no + ' ' + user_no);
+
+        PostsgoodVO postsgoodVO = this.postsgoodProc.readByContentsnoMemberno(map);
+
+        this.postsgoodProc.delete(postsgoodVO.getPostsgoodno()); // 추천 삭제
+        this.postProcInter.decreaseRecom(post_no); // 카운트 감소
+      } else {
+        System.out.println("-> 추천: " + post_no + ' ' + user_no);
+
+        PostsgoodVO postsgoodVO_new = new PostsgoodVO();
+        postsgoodVO_new.setPost_no(post_no);
+        postsgoodVO_new.setUser_no(user_no);
+
+        this.postsgoodProc.create(postsgoodVO_new);
+        this.postProcInter.increaseRecom(post_no); // 카운트 증가
+      }
+
+      // 추천 여부가 변경되어 다시 새로운 값을 읽어옴.
+      int hartCnt = this.postsgoodProc.hartCnt(map);
+      int recom = this.postProcInter.read(post_no).getRecom();
+
+      JSONObject result = new JSONObject();
+      result.put("isMember", 1); // 로그인: 1, 비회원: 0
+      result.put("hartCnt", hartCnt); // 추천 여부, 추천:1, 비추천: 0
+      result.put("recom", recom);   // 추천인수
+
+      System.out.println("-> result.toString(): " + result.toString());
+      return result.toString();
+
+    } else { // 정상적인 로그인이 아닌 경우 로그인 유도
+      JSONObject result = new JSONObject();
+      result.put("isMember", 0); // 로그인: 1, 비회원: 0
+
+      System.out.println("-> result.toString(): " + result.toString());
+      return result.toString();
+    }
+
+  }
+
 
 }

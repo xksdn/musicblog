@@ -171,4 +171,18 @@
         WHERE post_no = #{post_no}
     </update>
 
+    <!-- 추천 수 증가 -->
+    <update id="increaseRecom" parameterType="int">
+        UPDATE music_post
+        SET recom = recom + 1
+        WHERE post_no = #{post_no}
+    </update>
+
+    <!-- 추천 수 감소 -->
+    <update id="decreaseRecom" parameterType="int">
+        UPDATE music_post
+        SET recom = recom - 1
+        WHERE post_no = #{post_no}
+    </update>
+
 </mapper>

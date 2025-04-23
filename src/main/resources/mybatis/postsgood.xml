@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="dev.boot.mvc.db.PostsgoodDAOInter">
+    <!-- 등록 -->
+    <insert id="create" parameterType="dev.boot.mvc.db.PostsgoodVO">
+        INSERT INTO postsgood(postsgoodno, rdate, post_no, user_no)
+        VALUES (postsgood_seq.nextval, sysdate, #{post_no}, #{user_no})
+    </insert>
+
+    <!-- 전체 목록 -->
+    <select id="list_all" resultType="dev.boot.mvc.db.PostsgoodVO">
+        SELECT postsgoodno, rdate, post_no, user_no
+        FROM postsgood
+        ORDER BY postsgoodno DESC
+    </select>
+
+    <!-- 삭제 -->
+    <delete id="delete" parameterType="int">
+        DELETE FROM postsgood
+        WHERE postsgoodno = #{postsgoodno}
+    </delete>
+
+    <!-- 특정 컨텐츠의 특정 회원 추천 갯수 산출, 하나의 글에 대하여 중복 추천 안됨 -->
+    <select id="hartCnt" resultType="int" parameterType='HashMap'>
+        SELECT COUNT(*) as cnt
+        FROM postsgood
+        WHERE post_no=#{post_no} AND user_no=#{user_no}
+    </select>
+
+    <!-- 일반적인 조회 -->
+    <select id="read" resultType="dev.boot.mvc.db.PostsgoodVO" parameterType="int">
+        SELECT postsgoodno, rdate, post_no, user_no
+        FROM postsgood
+        WHERE postsgoodno = #{postsgoodno}
+    </select>
+
+    <!-- contentsno, memberno로 조회 -->
+    <select id="readByContentsnoMemberno" resultType="dev.boot.mvc.db.PostsgoodVO" parameterType="HashMap">
+        SELECT postsgoodno, rdate, post_no, user_no
+        FROM postsgood
+        WHERE post_no=#{post_no} AND user_no=#{user_no}
+    </select>
+
+    <!-- 전체 목록, 테이블 3개 join -->
+    <select id="list_all_join" resultType="dev.boot.mvc.db.PostsPostsgoodMemberVO">
+        SELECT r.postsgoodno, r.rdate, r.post_no, c.title as c_title, r.user_no, m.email, m.u_name
+        FROM music_post c, postsgood r, user_info m
+        WHERE c.post_no = r.post_no AND r.user_no = m.user_no
+        ORDER BY postsgoodno DESC
+    </select>
+
+</mapper>

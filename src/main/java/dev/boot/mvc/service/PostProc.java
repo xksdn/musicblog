@@ -267,4 +267,16 @@ public class PostProc implements PostProcInter {
 
     return cnt;
   }
+
+  @Override
+  public int increaseRecom(int post_no) {
+    int cnt = this.postDAOinter.increaseRecom(post_no);
+    return cnt;
+  }
+
+  @Override
+  public int decreaseRecom(int post_no) {
+    int cnt = this.postDAOinter.decreaseRecom(post_no);
+    return cnt;
+  }
 }
