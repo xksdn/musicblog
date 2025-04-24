@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="dev.boot.mvc.db.MemoDAOInter">
+
+<!--  메모 등록  -->
+    <insert id="create" parameterType="dev.boot.mvc.db.MemoVO">
+        INSERT INTO memo (memo_no, title, content, rdate, user_no)
+        VALUES (memo_seq.NEXTVAL, #{title}, #{content}, SYSDATE, #{user_no})
+    </insert>
+
+<!--  관리자가 보는 전체 메모 리스트 확인  -->
+    <select id="list_all" resultType="dev.boot.mvc.db.MemoVO">
+        SELECT memo_no, title, content, rdate, user_no
+        FROM memo
+        ORDER BY memo_no DESC
+    </select>
+
+<!--  해당 사용자가 등록한 메모 리스트 확인  -->
+    <select id="list_all_userno" resultType="dev.boot.mvc.db.MemoVO" parameterType="int">
+        SELECT memo_no, title, content, rdate, user_no
+        FROM memo
+        WHERE user_no = #{user_no}
+        ORDER BY memo_no DESC
+    </select>
+
+<!--  작성한 메모 읽기  -->
+    <select id="read" resultType="dev.boot.mvc.db.MemoVO" parameterType="int">
+        SELECT memo_no, title, content, rdate, user_no
+        FROM memo
+        WHERE memo_no = #{memo_no}
+    </select>
+
+
+<!--  메모 업데이트  -->
+    <update id="update" parameterType="dev.boot.mvc.db.MemoVO">
+        UPDATE memo
+        SET title = #{title}, content = #{content}
+        WHERE memo_no = #{meno_no}
+    </update>
+
+<!--  특정 메모 삭제  -->
+    <delete id="delete" parameterType="int">
+        DELETE FROM memo
+        WHERE memo_no = #{memo_no}
+    </delete>
+
+</mapper>

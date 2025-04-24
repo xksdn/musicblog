@@ -1,0 +1,16 @@
+package dev.boot.mvc.db;
+
+import java.util.ArrayList;
+
+public interface MemoDAOInter {
+  public int create(MemoVO memoVO);
+
+  public ArrayList<MemoVO> list_all();
+
+  public ArrayList<MemoVO> list_all_userno(int user_no);
+
+  public MemoVO read(int memo_no);
+
+
+
+}
