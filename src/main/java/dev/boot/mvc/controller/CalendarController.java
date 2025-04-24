@@ -56,7 +56,7 @@ public class CalendarController {
     return url; // forward, /templates/...
   }
   
-  // http://localhost:9091/calendar/create
+  // http://localhost:9092/calendar/create
   @GetMapping(value = "/create")
   public String create(Model model) {
     ArrayList<MenuVO> menu = this.cateProcInter.menu();
@@ -75,8 +75,8 @@ public class CalendarController {
   public String create(HttpSession session, Model model, 
            @ModelAttribute("calendarVO") CalendarVO calendarVO) {
     
-    // int memberno = (int)session.getAttribute("memberno");
-    int user_no = 1; // 테스트용
+     int user_no = (int)session.getAttribute("user_no");
+//    int user_no = 1; // 테스트용
     calendarVO.setUser_no(user_no);
     
     int cnt = this.calendarProc.create(calendarVO);

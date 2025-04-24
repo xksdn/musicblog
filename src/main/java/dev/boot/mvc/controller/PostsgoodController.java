@@ -2,6 +2,7 @@ package dev.boot.mvc.controller;
 
 
 import dev.boot.mvc.db.MenuVO;
+import dev.boot.mvc.db.PostsPostsgoodMemberVO;
 import dev.boot.mvc.db.PostsgoodVO;
 import dev.boot.mvc.service.CateProcInter;
 import dev.boot.mvc.service.PostsgoodProcInter;
@@ -16,6 +17,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
+
+// http://localhost:9092/
+// http://192.168.12.151:9092/
 
 @Controller
 @RequestMapping(value = "/postsgood")
@@ -65,24 +69,6 @@ public class PostsgoodController {
     return json.toString();
   }
   
-  /**
-   * 목록
-   *
-   * @param model
-   * @return
-   */
-  // http://localhost:9091/contentsgood/list_all
-  @GetMapping(value = "/list_all")
-  public String list_all(Model model) {
-    ArrayList<PostsgoodVO> list = this.postsgoodProc.list_all();
-    model.addAttribute("list", list);
-
-    ArrayList<MenuVO> menu = this.cateProc.menu();
-    model.addAttribute("menu", menu);
-
-    return "postsgood/list_all"; // /templates/postsgood/list_all.html
-  }
-  
 //  /**
 //   * 목록
 //   *
@@ -92,14 +78,32 @@ public class PostsgoodController {
 //  // http://localhost:9091/contentsgood/list_all
 //  @GetMapping(value = "/list_all")
 //  public String list_all(Model model) {
-//    ArrayList<ContentsContentsgoodMemberVO> list = this.contentsgoodProc.list_all_join();
+//    ArrayList<PostsgoodVO> list = this.postsgoodProc.list_all();
 //    model.addAttribute("list", list);
 //
-//    ArrayList<CateVOMenu> menu = this.cateProc.menu();
+//    ArrayList<MenuVO> menu = this.cateProc.menu();
 //    model.addAttribute("menu", menu);
 //
-//    return "contentsgood/list_all"; // /templates/contentsgood/list_all.html
+//    return "postsgood/list_all"; // /templates/postsgood/list_all.html
 //  }
+  
+  /**
+   * 목록
+   *
+   * @param model
+   * @return
+   */
+  // http://localhost:9091/contentsgood/list_all
+  @GetMapping(value = "/list_all")
+  public String list_all(Model model) {
+    ArrayList<PostsPostsgoodMemberVO> list = this.postsgoodProc.list_all_join();
+    model.addAttribute("list", list);
+
+    ArrayList<MenuVO> menu = this.cateProc.menu();
+    model.addAttribute("menu", menu);
+
+    return "postsgood/list_all_join"; // /templates/contentsgood/list_all.html
+  }
   
   /**
    * 삭제 처리 http://localhost:9091/contentsgood/delete?calendarno=1
