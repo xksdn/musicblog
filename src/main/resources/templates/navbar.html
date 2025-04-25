@@ -43,6 +43,20 @@
                         </ul>
                     </li>
 
+                    <li class="nav-item dropdown" th:if="${session.user_level=='user' || session.user_level=='admin'}">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink"
+                           role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="메모">
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <li class="nav-item">
+                                <a class="nav-link" th:href="@{|/memo/create?user_no=${session.user_no}|}">메모 등록</a>
+                            </li>
+<!--                            <li class="nav-item" th:if="${session.user_no != null}">-->
+<!--                                <a class="nav-link" th:href="@{|/user/passwd_update|}">비밀 번호 변경</a>-->
+<!--                            </li>-->
+                        </ul>
+                    </li>
+
                     <li class="nav-item dropdown" th:if="${session.user_level=='admin'}">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink"
                            role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="관리자">

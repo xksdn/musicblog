@@ -1,8 +1,11 @@
-package dev.boot.mvc.db;
+package dev.boot.mvc.service;
+
+import dev.boot.mvc.db.MemoVO;
 
 import java.util.ArrayList;
 
-public interface MemoDAOInter {
+public interface MemoProcInter {
+
   public int create(MemoVO memoVO);
 
   public ArrayList<MemoVO> list_all();

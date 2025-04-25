@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+
+<html layout:decorate="~{layout}" xmlns:layout="http://www.w3.org/1999/xhtml">
+<div layout:fragment="content">
+  <div class="title_line">메모 등록</div>
+
+  <aside class="aside_right">
+    <a href="javascript:location.reload();">새로고침</a>
+  </aside>
+
+  <div style="width: 50%; margin: 0px auto;">
+    <form name="frm" method="post" action="/memo/create" th:object="${memoVO}">
+      <input type="hidden" name="user_no" th:value="${session.user_no}">
+
+
+      <div>
+        <label>제목</label>
+        <input type="text" name="title" value="" required="required"
+                placeholder="메모명" autofocus="autofocus" class="form-control" style="width: 100%;">
+      </div>
+      <div>
+        <label>내용</label>
+        <textarea name="content" required="required" class="form-control" rows="12" style="width: 100%;"
+                  placeholder="내용을 입력해주세요."></textarea>
+      </div>
+
+    </form>
+
+  </div>
+
+
+</div>
+
+
+</html>
