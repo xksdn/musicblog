@@ -93,10 +93,108 @@ public class MemoController {
       }
 
     } else {
-      return "redirect://user/login_cookie_need";
+      return "redirect:/user/login_cookie_need";
     }
 
   }
 
 
+  @GetMapping("/list_all")
+  public String list_all(
+          HttpSession session,
+          Model model
+  ) {
+    ArrayList<MenuVO> menu = this.cateProcInter.menu();
+    model.addAttribute("menu", menu);
+
+    if (this.userProcinter.isAdmin(session)) {
+      ArrayList<MemoVO> list = this.memoProcInter.list_all();
+
+//      System.out.println("-> memo list: " + list);
+
+      model.addAttribute("list", list);
+      return "memo/list_all";
+    } else {
+      return "redirect:/user/login_cookie_need";
+    }
+  }
+
+  @GetMapping("/list_all_userno")
+  public String list_all_userno(
+          HttpSession session,
+          Model model,
+          @RequestParam(name = "user_no", defaultValue = "") int user_no
+  ) {
+    ArrayList<MenuVO> menu = this.cateProcInter.menu();
+    model.addAttribute("menu", menu);
+
+    if (this.userProcinter.isMember(session)) {
+      ArrayList<MemoVO> list = this.memoProcInter.list_all_userno(user_no);
+
+      model.addAttribute("list", list);
+
+      return "memo/list_all_userno";
+    } else {
+      return "redirect:/user/login_cookie_need";
+    }
+  }
+
+
+
+
+  @GetMapping("/read")
+  public String read(
+          Model model,
+          HttpSession session,
+          @RequestParam(name = "memo_no", defaultValue = "0") int memo_no
+  ) {
+    ArrayList<MenuVO> menu = this.cateProcInter.menu();
+    model.addAttribute("menu", menu);
+
+    if (this.userProcinter.isMember(session)){
+      MemoVO memoVO = this.memoProcInter.read(memo_no);
+
+      model.addAttribute("memoVO", memoVO);
+
+      return "memo/read";
+    } else {
+      return "redirect:/user/login_cookie_need";
+    }
+  }
+
+
+  @GetMapping("/update")
+  public String update(
+          Model model,
+          HttpSession session,
+          @RequestParam(name = "memo_no", defaultValue = "0") int memo_no
+  ) {
+    ArrayList<MenuVO> menu = this.cateProcInter.menu();
+    model.addAttribute("menu", menu);
+
+    if (this.userProcinter.isMember(session)) {
+      MemoVO memoVO = this.memoProcInter.read(memo_no);
+      model.addAttribute("memoVO", memoVO);
+
+      return "memo/update";
+    } else {
+      return "redirect:/user/login_cookie_need";
+    }
+  }
+
+  @PostMapping("/update")
+  public String update(
+          HttpSession session,
+          Model model,
+          RedirectAttributes ra,
+          MemoVO memoVO
+  ) {
+    if (this.userProcinter.isMember(session)) {
+      this.memoProcInter.update(memoVO);
+
+      return "redirect:/memo/read?memo_no="+memoVO.getMemo_no();
+    } else {
+      return "redirect:/user/login_cookie_need";
+    }
+  }
 }

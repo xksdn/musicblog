@@ -380,7 +380,7 @@ public class PostController {
     model.addAttribute("no", no);
 
     // /templates/contents/list_by_cateno_search_paging_grid.html
-    return "/posts/list_by_cateno_search_paging_grid";
+    return "posts/list_by_cateno_search_paging_grid";
   }
 
 
@@ -639,7 +639,7 @@ public class PostController {
       CategoryVO categoryVO = this.cateProcInter.read(postVO.getCate_id());
       model.addAttribute("categoryVO", categoryVO);
 
-      return "/posts/update_file";
+      return "posts/update_file";
     } else {
       return "redirect:/user/login_cookie_need?url=/posts/update_file?post_no=" + post_no;
     }
@@ -755,7 +755,7 @@ public class PostController {
       CategoryVO categoryVO = this.cateProcInter.read(postVO.getCate_id());
       model.addAttribute("categoryVO", categoryVO);
 
-      return "/posts/delete"; // forward
+      return "posts/delete"; // forward
 
     } else {
       return "redirect:/user/login_cookie_need?url=/posts/delete?post_no=" + post_no;

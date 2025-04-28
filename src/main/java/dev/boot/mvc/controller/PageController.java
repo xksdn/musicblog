@@ -54,7 +54,7 @@ public class PageController {
     ArrayList<MenuVO> menu = this.cateProcInter.menu();
     model.addAttribute("menu", menu);
 
-    return "/cate/create";
+    return "cate/create";
   }
 
 
@@ -68,7 +68,7 @@ public class PageController {
           RedirectAttributes ra
   ) {
     if (bindingResult.hasErrors()) {
-      return "/cate/create";
+      return "cate/create";
     } else {
       int cnt = this.cateProcInter.create(categoryVO);
 
@@ -288,7 +288,7 @@ public class PageController {
     model.addAttribute("no", no);
     // --------------------------------------------------------------------------------------
 
-    return "/cate/delete";
+    return "cate/delete";
 
   }
 
@@ -336,7 +336,7 @@ public class PageController {
       model.addAttribute("artist", categoryVO.getArtist());
       model.addAttribute("cnt", cnt);
 
-      return "/cate/msg";
+      return "cate/msg";
     }
   }
 

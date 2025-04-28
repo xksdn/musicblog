@@ -154,7 +154,7 @@ public class CalendarController {
     } else {
       // ra.addAttribute("url", "/member/login_cookie_need"); // /templates/member/login_cookie_need.html
       // return "redirect:/contents/msg"; // @GetMapping(value = "/msg")
-      return "member/login_cookie_need"; // /templates/member/login_cookie_need.html
+      return "user/login_cookie_need"; // /templates/member/login_cookie_need.html
     }
 
   }
@@ -176,7 +176,7 @@ public class CalendarController {
       return "redirect:/calendar/read/" + calendarVO.getCalendarno(); // @GetMapping(value = "/read")
 
     } else { // 정상적인 로그인이 아닌 경우 로그인 유도
-      ra.addAttribute("url", "/member/login_cookie_need"); // /templates/member/login_cookie_need.html
+      ra.addAttribute("url", "/user/login_cookie_need"); // /templates/member/login_cookie_need.html
       return "redirect:/calendar/post2get"; // @GetMapping(value = "/msg")
     }
 
@@ -203,7 +203,7 @@ public class CalendarController {
     } else {
       // ra.addAttribute("url", "/member/login_cookie_need"); // /templates/member/login_cookie_need.html
       // return "redirect:/contents/msg"; // @GetMapping(value = "/msg")
-      return "member/login_cookie_need"; // /templates/member/login_cookie_need.html
+      return "user/login_cookie_need"; // /templates/member/login_cookie_need.html
     }
   }
   
@@ -224,7 +224,7 @@ public class CalendarController {
       return "redirect:/calendar/list_all";
 
     } else { // 정상적인 로그인이 아닌 경우 로그인 유도
-      ra.addAttribute("url", "/member/login_cookie_need"); // /templates/member/login_cookie_need.html
+      ra.addAttribute("url", "/user/login_cookie_need"); // /templates/member/login_cookie_need.html
       return "redirect:/calendar/post2get"; // @GetMapping(value = "/msg")
     }
 

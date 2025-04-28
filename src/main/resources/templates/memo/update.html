@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+
+<html layout:decorate="~{layout}" xmlns:layout="http://www.w3.org/1999/xhtml"> <!-- layout.html 상속-->
+<div layout:fragment="content">
+
+  <div class="title_line">
+    <span class="title_line_text">메모 수정</span>
+  </div>
+
+  <aside class="aside_right">
+    <a href="javascript:location.reload();">새로고침</a>
+    <span class='menu_divide' >│</span>
+    <a th:href="@{|./list_all_userno?user_no=${session.user_no}|}">목록</a>
+    <span class='menu_divide' >│</span>
+    <a th:href="@{|./create?user_no=${session.user_no}|}">등록</a>
+    <span class='menu_divide' >│</span>
+    <a th:href="@{|./delete?memo_no=${memoVO.memo_no}|}">삭제</a>
+  </aside>
+
+  <div class='menu_line'></div>
+
+  <form name="frm" method="post" th:object="${memoVO}" action="./update">
+    <input type="hidden" name="user_no" th:value="${memoVO.user_no}">
+    <input type="hidden" name="memo_no" th:value="${memoVO.memo_no}">
+
+    <div>
+      <label>제목</label>
+      <input type='text' name='title' th:value='${memoVO.title}' required="required"
+             autofocus="autofocus" class="form-control" style='width: 100%;'>
+    </div>
+
+    <div>
+      <label>내용</label>
+      <textarea name='content' required="required" class="form-control" rows="12" style='width: 100%;'
+                th:text='${memoVO.content}'></textarea>
+    </div>
+
+
+    <div class="content_body_bottom">
+      <button type="submit" class="btn btn-secondary btn-sm">등록</button>
+      <button type="button" th:attr="onclick=|location.href='list_all_userno?user_no=${session.user_no}'|" class="btn btn-secondary btn-sm">취소(목록)</button>
+      <button type="button" th:if="${session.user_level == 'admin'}"
+              th:attr="onclick=|location.href='list_all_userno?user_no=${session.user_no}'|" class="btn btn-secondary btn-sm">전체목록</button>
+    </div>
+
+  </form>
+
+</div>
+</html>

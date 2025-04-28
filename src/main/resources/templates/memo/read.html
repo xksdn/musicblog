@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+
+<html layout:decorate="~{layout}" xmlns:layout="http://www.w3.org/1999/xhtml"> <!-- layout.html 상속-->
+<div layout:fragment="content">
+  <div class="title_line">
+    <span class="title_line_text">메모 조회</span>
+  </div>
+
+  <aside class="aside_right">
+    <a href="javascript:location.reload();">새로고침</a>
+    <span class='menu_divide' >│</span>
+    <a th:href="@{|./list_all_userno?user_no=${session.user_no}|}">목록</a>
+    <span class='menu_divide' >│</span>
+    <a th:href="@{|./create?user_no=${session.user_no}|}">등록</a>
+    <span class='menu_divide' >│</span>
+    <a th:href="@{|./update?memo_no=${memoVO.memo_no}|}">수정</a>
+    <span class='menu_divide' >│</span>
+    <a th:href="@{|./delete?memo_no=${memoVO.memo_no}|}">삭제</a>
+  </aside>
+
+  <div class='menu_line'></div>
+
+  <fieldset class="fieldset_basic">
+    <ul>
+      <li class="li_none">
+        <div style="width: 100%; word-break: break-word; display: flex; justify-content: space-between; align-items: center;">
+          <span style="font-size: 1.5em; font-weight: bold;" th:text="${memoVO.title}"></span>
+          <span style="font-size: 1em; color: gray;" th:text="${memoVO.rdate}"></span>
+        </div>
+
+        <hr style="margin: 10px 0; border: none; border-top: 1px solid #ccc;">
+
+        <br><br>
+
+        <div style="white-space: pre-wrap;"><span th:text="${memoVO.content}"></span></div>
+      </li>
+    </ul>
+  </fieldset>
+
+
+
+</div>
+</html>

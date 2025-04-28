@@ -37,7 +37,7 @@
     <update id="update" parameterType="dev.boot.mvc.db.MemoVO">
         UPDATE memo
         SET title = #{title}, content = #{content}
-        WHERE memo_no = #{meno_no}
+        WHERE memo_no = #{memo_no}
     </update>
 
 <!--  특정 메모 삭제  -->

@@ -24,6 +24,14 @@
                   placeholder="내용을 입력해주세요."></textarea>
       </div>
 
+
+      <div class="content_body_bottom">
+        <button type="submit" class="btn btn-secondary btn-sm">등록</button>
+        <button type="button" th:attr="onclick=|location.href='list_all_userno?user_no=${session.user_no}'|" class="btn btn-secondary btn-sm">취소(목록)</button>
+        <button type="button" th:if="${session.user_level == 'admin'}"
+                th:attr="onclick=|location.href='list_all_userno?user_no=${session.user_no}'|" class="btn btn-secondary btn-sm">전체목록</button>
+      </div>
+
     </form>
 
   </div>
