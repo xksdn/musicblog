@@ -58,11 +58,17 @@ public class MemoController {
   @GetMapping("/create")
   public String create (
           Model model,
-          @ModelAttribute("memoVO") MemoVO memoVO,
-          @RequestParam(name = "user_no", defaultValue = "0") int user_no
+          HttpSession session,
+          @ModelAttribute("memoVO") MemoVO memoVO
   ) {
     ArrayList<MenuVO> menu = this.cateProcInter.menu();
     model.addAttribute("menu", menu);
+
+    Integer user_no = (Integer) session.getAttribute("user_no");
+
+    if (user_no == null) {
+      return "redirect:/user/login_cookie_need"; // 로그인 필요
+    }
 
     return "memo/create";
   }
@@ -76,6 +82,8 @@ public class MemoController {
           @ModelAttribute("memoVO") MemoVO memoVO,
           RedirectAttributes ra
   ) {
+    System.out.println("-> 메모 생성시 session : " + session.getAttribute("user_level"));
+
     if (userProcinter.isMember(session)) {
 
       int user_no = (int) session.getAttribute("user_no");
@@ -83,9 +91,13 @@ public class MemoController {
 
       int cnt = this.memoProcInter.create(memoVO);
 
+      System.out.println("session id: " + session.getId());
+      System.out.println("user_no in session: " + session.getAttribute("user_no"));
+
+
       if (cnt == 1) {
         System.out.println("-> memo create!");
-        return "redirect:/memo/list_all";
+        return "redirect:/memo/list_all_userno?user_no="+user_no;
       } else {
         model.addAttribute("code", "create_fail");
         model.addAttribute("cnt", cnt);
@@ -197,4 +209,39 @@ public class MemoController {
       return "redirect:/user/login_cookie_need";
     }
   }
+
+  @GetMapping("/delete")
+  public String delete(
+          HttpSession session,
+          Model model,
+          @RequestParam(name = "memo_no", defaultValue = "0") int memo_no
+  ) {
+    ArrayList<MenuVO> menu = this.cateProcInter.menu();
+    model.addAttribute("menu", menu);
+
+    if (this.userProcinter.isMember(session)) {
+      MemoVO memoVO = this.memoProcInter.read(memo_no);
+      model.addAttribute("memoVO", memoVO);
+
+      return "memo/delete";
+    } else {
+      return "redirect:/user/login_cookie_need";
+    }
+  }
+
+
+  @PostMapping("/delete")
+  public String delete(
+          HttpSession session,
+          Model model,
+          @RequestParam(name = "memo_no", defaultValue = "0") int memo_no,
+          @RequestParam(name = "user_no", defaultValue = "0") int user_no,
+          RedirectAttributes ra,
+          MemoVO memoVO
+  ) {
+    this.memoProcInter.delete(memo_no);
+
+    return "redirect:/memo/list_all_userno?user_no="+user_no;
+  }
+
 }

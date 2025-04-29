@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout}" xmlns:layout="http://www.w3.org/1999/xhtml">
+<div layout:fragment="content">
+
+  <div class="title_line">
+    <span class="title_line_text">메모 삭제</span>
+  </div>
+
+  <aside class="aside_right">
+    <a th:href="@{|./list_all_userno?user_no=${session.user_no}|}">목록</a>
+    <span class='menu_divide'>│</span>
+    <a th:href="@{|./create?user_no=${session.user_no}|}">등록</a>
+    <span class='menu_divide'>│</span>
+    <a th:href="@{|./update?memo_no=${memoVO.memo_no}|}">수정</a>
+    <span class='menu_divide'>│</span>
+    <a href="javascript:location.reload();">새로고침</a>
+  </aside>
+
+  <div class='menu_line'></div>
+
+  <div style="max-width: 500px; margin: 50px auto; background: #fff3f3; border: 1px solid #ffcccc; border-radius: 12px; padding: 30px; text-align: center; box-shadow: 0 4px 10px rgba(255, 0, 0, 0.1);">
+    <form name="frm" method="post" action="./delete">
+      <input type="hidden" name="memo_no" th:value="${memoVO.memo_no}">
+      <input type="hidden" name="user_no" th:value="${memoVO.user_no}">
+
+      <div style="font-size: 20px; font-weight: bold; color: #cc0000; margin-bottom: 20px;">
+        ⚠️ 정말 삭제하시겠습니까?
+      </div>
+
+      <div style="font-size: 14px; color: #aa0000; margin-bottom: 30px;">
+        삭제하면 복구할 수 없습니다.<br>신중히 결정해주세요.
+      </div>
+
+      <div style="display: flex; justify-content: center; gap: 20px;">
+        <button type="submit" class="btn btn-danger btn-sm" style="padding: 8px 20px;">삭제</button>
+        <button type="button" onclick="history.back();" class="btn btn-outline-secondary btn-sm" style="padding: 8px 20px;">취소</button>
+      </div>
+    </form>
+  </div>
+
+</div>
+</html>

@@ -107,6 +107,7 @@ public class UserProc implements UserProcinter{
     String user_level = (String) session.getAttribute("user_level");
 
     if (user_level != null) {
+      System.out.println("User level in session: " + user_level);
       if (user_level.equals("admin") || user_level.equals("user")) {
         sw = true;
       }

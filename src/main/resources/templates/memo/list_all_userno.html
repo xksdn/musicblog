@@ -1,44 +1,59 @@
 <!DOCTYPE html>
-
-<html layout:decorate="~{layout}" xmlns:layout="http://www.w3.org/1999/xhtml"> <!-- layout.html 상속-->
+<html layout:decorate="~{layout}" xmlns:layout="http://www.w3.org/1999/xhtml">
 <div layout:fragment="content">
 
   <div class="title_line">메모 목록</div>
 
   <aside class="aside_right">
-    <a th:href="@{|/memo/create?user_no=${session.user_no}|}">등록</a>
-    <span class='menu_divide' >│</span>
+    <a th:href="@{|./list_all_userno?user_no=${session.user_no}|}">목록</a>
+    <span class='menu_divide'>│</span>
+    <a th:href="@{|./create?user_no=${session.user_no}|}">등록</a>
+    <span class='menu_divide'>│</span>
     <a href="javascript:location.reload();">새로고침</a>
+
   </aside>
 
-  <div class='menu_line'></div>
+  <div class="menu_line"></div>
 
-  <table class="table table-striped" style='width: 100%;'>
-    <colgroup>
-      <col style='width: 20%;'/>
-      <col style='width: 80%;'/>
-    </colgroup>
+  <!-- 메모 카드 리스트 시작 -->
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 20px;">
+    <div th:each="memoVO : ${list}"
+         style="background: #f8f9fa; padding: 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); position: relative; transition: transform 0.2s ease; display: flex; flex-direction: column; justify-content: space-between;">
 
-    <tr>
-      <th class='th_bs'>사용자 id</TH>
-      <th class='th_bs'>제목</th>
-    </tr>
+      <!-- 메모 내용 -->
+      <div th:attr="onclick=|location.href='/memo/read?memo_no=${memoVO.memo_no}'|" style="flex-grow: 1; cursor: pointer;">
+        <div style="font-size: 18px; font-weight: bold; margin-bottom: 10px;" th:text="${memoVO.title}"></div>
 
-    <tr th:each="memoVO : ${list}"
-        th:attr="onclick=|location.href='/memo/read?memo_no=${memoVO.memo_no}'|"
-        style="cursor: pointer;">
-      <td class="td_basic" th:text="${memoVO.memo_no}"></td>
-      <td class="td_left">
-        <span th:text="${memoVO.title}" style="font-weight: bold;"></span>
-      </td>
+        <div style="font-size: 14px; color: #555;">
+          <span th:if="${memoVO.content.length() > 50}"
+                th:text="|${memoVO.content.substring(0, 50)}...|"></span>
+          <span th:if="${memoVO.content.length() <= 50}"
+                th:text="|${memoVO.content}|"></span>
+        </div>
+      </div>
 
-    </tr>
+      <!-- 수정/삭제 아이콘 (카드 오른쪽 아래) -->
+      <div style="margin-top: 10px; text-align: right;">
+        <a th:href="@{|/memo/update?memo_no=${memoVO.memo_no}|}">
+          <img src="/memo/images/update.png" class="icon" title="수정" style="width: 20px; height: 20px; margin-right: 8px;">
+        </a>
+        <a th:href="@{|/memo/delete?memo_no=${memoVO.memo_no}|}">
+          <img src="/memo/images/delete.png" class="icon" title="삭제" style="width: 20px; height: 20px;">
+        </a>
+      </div>
 
-  </table>
+    </div>
 
-  <div class='bottom_menu'>
-    <button type='button' onclick="location.reload();" class="btn btn-primary btn-sm">새로 고침</button>
+    <!-- 글 없을 때 -->
+    <div th:if="${list.size() == 0}" style="grid-column: 1 / -1; text-align: center; padding: 50px 0;">
+      <span>등록된 메모가 없습니다.</span>
+    </div>
   </div>
+  <!-- 메모 카드 리스트 끝 -->
+
+<!--  <div class="bottom_menu" style="margin-top: 30px; text-align: center;">-->
+<!--    <button type='button' onclick="location.reload();" class="btn btn-primary btn-sm">새로 고침</button>-->
+<!--  </div>-->
 
 </div>
 </html>

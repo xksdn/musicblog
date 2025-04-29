@@ -5,8 +5,13 @@
   <div class="title_line">메모 등록</div>
 
   <aside class="aside_right">
+    <a th:href="@{|./list_all_userno?user_no=${session.user_no}|}">목록</a>
+    <span class="menu_divide">│</span>
     <a href="javascript:location.reload();">새로고침</a>
   </aside>
+
+
+  <div class='menu_line'></div>
 
   <div style="width: 50%; margin: 0px auto;">
     <form name="frm" method="post" action="/memo/create" th:object="${memoVO}">
@@ -29,7 +34,7 @@
         <button type="submit" class="btn btn-secondary btn-sm">등록</button>
         <button type="button" th:attr="onclick=|location.href='list_all_userno?user_no=${session.user_no}'|" class="btn btn-secondary btn-sm">취소(목록)</button>
         <button type="button" th:if="${session.user_level == 'admin'}"
-                th:attr="onclick=|location.href='list_all_userno?user_no=${session.user_no}'|" class="btn btn-secondary btn-sm">전체목록</button>
+                th:attr="onclick=|location.href='list_all'|" class="btn btn-secondary btn-sm">전체목록</button>
       </div>
 
     </form>
